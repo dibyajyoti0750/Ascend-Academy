@@ -13,22 +13,24 @@ import {
   NavigationMenuTrigger,
 } from "@/components/ui/navigation-menu";
 import SearchBar from "@/components/student/SearchBar";
+import { Dropdown } from "@/components/Dropdown";
 
-const featuredCourses = [
+export const featuredCourses = [
   {
     href: "/all-courses/web-dev",
     label: "Web Development",
     description: "Learn full stack development with MERN.",
   },
-  {
-    href: "/all-courses/design",
-    label: "UI/UX Design",
-    description: "Master clean and modern interface design.",
-  },
+
   {
     href: "/all-courses/ai",
     label: "AI & Automation",
     description: "Build AI powered applications and workflows.",
+  },
+  {
+    href: "/all-courses/design",
+    label: "UI/UX Design",
+    description: "Master clean and modern interface design.",
   },
   {
     href: "/all-courses/marketing",
@@ -46,22 +48,24 @@ const Navbar = () => {
 
   return (
     <header className="border-b">
-      <div className="grid h-16 grid-cols-3 items-center px-16">
+      <div className="flex h-16 items-center justify-between px-4 lg:grid lg:grid-cols-3 lg:px-16">
         {/* Left */}
-        <div className="flex items-center gap-6">
+        <div className="flex items-center gap-4 lg:gap-6">
           <Link href="/" className="flex shrink-0 items-center gap-1">
             <Navigation2 size={24} className="shrink-0" />
 
-            <span className="text-2xl font-bold tracking-tight">
+            <span className="hidden text-2xl font-bold tracking-tight sm:block">
               Ascend Academy
             </span>
           </Link>
 
-          <SearchBar />
+          <div className="flex-1 lg:flex-none">
+            <SearchBar />
+          </div>
         </div>
 
         {/* Center */}
-        <div className="flex justify-center">
+        <div className="hidden justify-center lg:flex">
           <NavigationMenu>
             <NavigationMenuList>
               {/* Home */}
@@ -114,31 +118,41 @@ const Navbar = () => {
 
         {/* Right */}
         <div className="flex items-center justify-end gap-2">
-          <Show when={"signed-out"}>
-            <SignInButton>
-              <span className="cursor-pointer text-sm font-medium">Login</span>
-            </SignInButton>
+          {/* Mobile Menu */}
+          <div className="lg:hidden">
+            <Dropdown />
+          </div>
 
-            <SignUpButton>
-              <span className="cursor-pointer rounded-md bg-black px-4 py-2 text-sm font-medium text-white transition-opacity hover:opacity-90 dark:bg-white dark:text-black">
-                Join Now
-              </span>
-            </SignUpButton>
-          </Show>
+          {/* Desktop Auth */}
+          <div className="hidden items-center gap-2 lg:flex">
+            <Show when={"signed-out"}>
+              <SignInButton>
+                <span className="cursor-pointer text-sm font-medium">
+                  Login
+                </span>
+              </SignInButton>
 
-          <Show when={"signed-in"}>
-            {isEducator && (
-              <Link href="/educator" className={navLinkClass}>
-                Dashboard
+              <SignUpButton>
+                <span className="cursor-pointer rounded-md bg-black px-4 py-2 text-sm font-medium text-white transition-opacity hover:opacity-90 dark:bg-white dark:text-black">
+                  Join Now
+                </span>
+              </SignUpButton>
+            </Show>
+
+            <Show when={"signed-in"}>
+              {isEducator && (
+                <Link href="/educator" className={navLinkClass}>
+                  Dashboard
+                </Link>
+              )}
+
+              <Link href="/my-enrollments" className={navLinkClass}>
+                My Enrollments
               </Link>
-            )}
 
-            <Link href="/my-enrollments" className={navLinkClass}>
-              My Enrollments
-            </Link>
-
-            <UserButton />
-          </Show>
+              <UserButton />
+            </Show>
+          </div>
         </div>
       </div>
     </header>
