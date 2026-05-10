@@ -1,11 +1,21 @@
+"use client";
+
 import { Search, X } from "lucide-react";
-import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { SubmitEvent, useState } from "react";
 
 export default function SearchBar() {
   const [query, setQuery] = useState("");
+  const router = useRouter();
+
+  const onSearch = (e: SubmitEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (!query.trim()) return;
+    router.push(`/course-list/${encodeURIComponent(query)}`);
+  };
 
   return (
-    <div className="w-full">
+    <form className="w-full" onSubmit={onSearch}>
       <div className="flex h-11 w-full items-center gap-2 rounded-xl border border-border bg-background/70 px-3 sm:h-12 sm:gap-3 sm:rounded-2xl sm:px-4">
         <Search className="size-4 shrink-0 text-muted-foreground sm:size-5" />
 
@@ -19,6 +29,7 @@ export default function SearchBar() {
 
         {query && (
           <button
+            type="button"
             onClick={() => setQuery("")}
             className="flex shrink-0 items-center justify-center text-muted-foreground transition hover:text-foreground"
           >
@@ -26,6 +37,6 @@ export default function SearchBar() {
           </button>
         )}
       </div>
-    </div>
+    </form>
   );
 }
