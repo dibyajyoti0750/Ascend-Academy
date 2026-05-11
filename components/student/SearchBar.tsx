@@ -11,7 +11,7 @@ export default function SearchBar() {
   const onSearch = (e: SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!query.trim()) return;
-    router.push(`/course-list/${encodeURIComponent(query)}`);
+    router.push(`/course-list?query=${query}`);
   };
 
   return (
