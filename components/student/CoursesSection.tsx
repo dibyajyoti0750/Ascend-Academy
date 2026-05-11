@@ -1,168 +1,108 @@
-import Image from "next/image";
-import Link from "next/link";
-import { Clock, Star, Users } from "lucide-react";
+"use client";
 
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-} from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
+import { dummyCourses } from "@/assets/assets";
+import CourseCard from "./CourseCard";
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { ArrowRight, Sparkles } from "lucide-react";
+import Link from "next/link";
 
-interface Course {
-  _id: string;
-  courseTitle: string;
-  courseDescription: string;
-  coursePrice: number;
-  discount: number;
-  courseThumbnail: string;
-  enrolledStudents: string[];
-  courseRatings: {
-    rating: number;
-  }[];
-  courseContent: {
-    chapterContent: {
-      lectureDuration: number;
-    }[];
-  }[];
-}
-
-interface CoursesSectionProps {
-  courses: Course[];
-}
-
-export default function CoursesSection({ courses }: CoursesSectionProps) {
-  const getTotalDuration = (course: Course) => {
-    return course.courseContent.reduce((total, chapter) => {
-      return (
-        total +
-        chapter.chapterContent.reduce(
-          (sum, lecture) => sum + lecture.lectureDuration,
-          0,
-        )
-      );
-    }, 0);
-  };
-
-  const getAverageRating = (course: Course) => {
-    if (!course.courseRatings.length) return 0;
-
-    const total = course.courseRatings.reduce(
-      (sum, rating) => sum + rating.rating,
-      0,
-    );
-
-    return (total / course.courseRatings.length).toFixed(1);
-  };
-
-  const getDiscountedPrice = (price: number, discount: number) => {
-    return price - (price * discount) / 100;
-  };
-
+export default function CoursesSection() {
   return (
-    <section className="py-20">
-      <div className="container mx-auto px-4">
-        <div className="mb-10 flex items-end justify-between">
-          <div>
-            <p className="mb-2 text-sm font-medium text-primary">
-              Popular Courses
-            </p>
+    <section className="relative w-full overflow-hidden py-20 md:py-28">
+      <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        {/* ── Header ── */}
+        <div className="mb-12 flex flex-col items-start gap-4 sm:flex-row sm:items-end sm:justify-between">
+          <div className="flex flex-col gap-3">
+            {/* Eyebrow */}
+            <Badge
+              variant="secondary"
+              className="w-fit gap-1.5 rounded-full px-3 py-1 text-[12px] font-medium tracking-wide"
+            >
+              <Sparkles className="h-3 w-3 text-amber-500" /> Handpicked for you
+            </Badge>
 
-            <h2 className="text-3xl font-bold tracking-tight md:text-4xl">
-              Learn New Skills
+            {/* Headline */}
+            <h2 className="text-3xl font-bold tracking-tight text-foreground sm:text-4xl lg:text-[2.75rem] lg:leading-[1.15]">
+              Featured{" "}
+              <span className="relative inline-block">
+                Courses
+                {/* Underline accent */}
+                <span
+                  aria-hidden
+                  className="absolute -bottom-1 left-0 h-[3px] w-full rounded-full bg-linear-to-r from-indigo-500 to-violet-500"
+                />
+              </span>
             </h2>
+
+            <p className="max-w-xl text-[15px] leading-relaxed text-muted-foreground">
+              Expand your skills with expert-led courses — curated from
+              thousands of learners&apos; favourites.
+            </p>
           </div>
 
-          <Button variant="outline" asChild>
-            <Link href="/course-list">View All</Link>
+          {/* Desktop CTA */}
+          <Button
+            asChild
+            variant="outline"
+            className="hidden shrink-0 gap-2 rounded-full border-border/80 sm:flex"
+          >
+            <Link href="/course-list" className="group">
+              Browse all courses
+              <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-0.5" />
+            </Link>
           </Button>
         </div>
 
-        <div className="grid gap-6 sm:grid-cols-2 xl:grid-cols-4">
-          {courses.slice(0, 4).map((course) => {
-            const totalDuration = getTotalDuration(course);
-            const avgRating = getAverageRating(course);
-            const discountedPrice = getDiscountedPrice(
-              course.coursePrice,
-              course.discount,
-            );
+        {/* ── Grid ── */}
+        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+          {dummyCourses.slice(0, 4).map((course, index) => (
+            <div
+              key={index}
+              className="animate-fade-up opacity-0"
+              style={{
+                animationDelay: `${index * 80}ms`,
+                animationFillMode: "forwards",
+              }}
+            >
+              <CourseCard {...course} />
+            </div>
+          ))}
+        </div>
 
-            return (
-              <Card
-                key={course._id}
-                className="group overflow-hidden rounded-2xl border p-0 transition-all hover:-translate-y-1 hover:shadow-xl"
-              >
-                <div className="relative aspect-video overflow-hidden">
-                  <Image
-                    src={course.courseThumbnail}
-                    alt={course.courseTitle}
-                    fill
-                    className="object-cover transition-transform duration-300 group-hover:scale-105"
-                  />
-
-                  {course.discount > 0 && (
-                    <Badge className="absolute left-3 top-3 rounded-full border border-white/20 bg-white/10 px-3 py-1 text-xs font-semibold text-white shadow-lg backdrop-blur-xl">
-                      {course.discount}% OFF
-                    </Badge>
-                  )}
-                </div>
-
-                <CardHeader className="space-y-3">
-                  <h3 className="line-clamp-2 text-lg font-semibold">
-                    {course.courseTitle}
-                  </h3>
-
-                  <div className="flex items-center gap-4 text-sm text-muted-foreground">
-                    <div className="flex items-center gap-1">
-                      <Star className="size-4 fill-yellow-400 text-yellow-400" />
-                      <span>{avgRating}</span>
-                    </div>
-
-                    <div className="flex items-center gap-1">
-                      <Users className="size-4" />
-                      <span>{course.enrolledStudents.length}</span>
-                    </div>
-
-                    <div className="flex items-center gap-1">
-                      <Clock className="size-4" />
-                      <span>{totalDuration}m</span>
-                    </div>
-                  </div>
-                </CardHeader>
-
-                <CardContent>
-                  <div
-                    className="line-clamp-3 text-sm text-muted-foreground"
-                    dangerouslySetInnerHTML={{
-                      __html: course.courseDescription,
-                    }}
-                  />
-                </CardContent>
-
-                <CardFooter className="flex items-center justify-between">
-                  <div className="flex items-center gap-2">
-                    <span className="text-xl font-bold">
-                      ${discountedPrice.toFixed(2)}
-                    </span>
-
-                    {course.discount > 0 && (
-                      <span className="text-sm text-muted-foreground line-through">
-                        ${course.coursePrice.toFixed(2)}
-                      </span>
-                    )}
-                  </div>
-
-                  <Button asChild>
-                    <Link href={`/courses/${course._id}`}>Enroll</Link>
-                  </Button>
-                </CardFooter>
-              </Card>
-            );
-          })}
+        {/* ── Mobile CTA ── */}
+        <div className="mt-10 flex justify-center sm:hidden">
+          <Button
+            asChild
+            variant="outline"
+            className="gap-2 rounded-full border-border/80"
+          >
+            <Link href="/courses">
+              Browse all courses
+              <ArrowRight className="h-4 w-4" />
+            </Link>
+          </Button>
         </div>
       </div>
+
+      {/* ── Keyframe injection ── */}
+      <style>{`
+        @keyframes fade-up {
+          from {
+            opacity: 0;
+            transform: translateY(20px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+        .animate-fade-up {
+          animation-name: fade-up;
+          animation-duration: 500ms;
+          animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+        }
+      `}</style>
     </section>
   );
 }
