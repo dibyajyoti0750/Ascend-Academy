@@ -13,6 +13,7 @@ import {
 } from "@/components/ui/tooltip";
 import { BookOpen, Clock, Star, Users, Zap } from "lucide-react";
 import Image from "next/image";
+import { useStore } from "@/store/educator-store";
 
 /* ─────────────────────────────────────────────
    Helpers
@@ -77,6 +78,8 @@ function StarRating({ rating }: { rating: number }) {
 ───────────────────────────────────────────── */
 
 export default function CourseCard(course: Course) {
+  const { currency } = useStore();
+
   const {
     courseTitle,
     courseDescription,
@@ -219,10 +222,12 @@ export default function CourseCard(course: Course) {
             {hasDiscount && discountedPrice !== null ? (
               <>
                 <span className="text-[17px] font-bold leading-none text-foreground">
-                  ${discountedPrice.toFixed(2)}
+                  {currency}
+                  {discountedPrice.toFixed(2)}
                 </span>
                 <span className="text-[11px] leading-none text-muted-foreground line-through">
-                  ${coursePrice.toFixed(2)}
+                  {currency}
+                  {coursePrice.toFixed(2)}
                 </span>
               </>
             ) : coursePrice === 0 ? (
@@ -231,7 +236,8 @@ export default function CourseCard(course: Course) {
               </span>
             ) : (
               <span className="text-[17px] font-bold leading-none text-foreground">
-                ${coursePrice.toFixed(2)}
+                {currency}
+                {coursePrice.toFixed(2)}
               </span>
             )}
           </div>

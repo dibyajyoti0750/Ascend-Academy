@@ -14,6 +14,7 @@ import {
 } from "@/components/ui/navigation-menu";
 import SearchBar from "@/components/student/SearchBar";
 import { Dropdown } from "@/components/Dropdown";
+import { useStore } from "@/store/educator-store";
 
 export const featuredCourses = [
   {
@@ -44,7 +45,7 @@ const navLinkClass =
 
 const Navbar = () => {
   // Replace this later with real auth logic
-  const isEducator = true;
+  const { isEducator } = useStore();
 
   return (
     <header className="border-b">
@@ -141,7 +142,7 @@ const Navbar = () => {
 
             <Show when={"signed-in"}>
               {isEducator && (
-                <Link href="/educator" className={navLinkClass}>
+                <Link href="/educator-dashboard" className={navLinkClass}>
                   Dashboard
                 </Link>
               )}
