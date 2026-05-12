@@ -1,6 +1,15 @@
 import { assets } from "@/assets/assets";
 import Image from "next/image";
 
+const companies = [
+  assets.amazon,
+  assets.apple,
+  assets.google,
+  assets.meta,
+  assets.microsoft,
+  assets.playstation,
+];
+
 export default function Companies() {
   return (
     <section className="py-10">
@@ -9,14 +18,14 @@ export default function Companies() {
       </p>
 
       <div className="flex flex-wrap items-center justify-center gap-10">
-        {assets.map((asset, index) => (
+        {companies.map((asset, index) => (
           <div
             key={index}
             className="opacity-70 grayscale transition hover:opacity-100 hover:grayscale-0"
           >
             <Image
               src={asset}
-              alt={`compny-${index}`}
+              alt={`company-${index}`}
               width={120}
               height={40}
               className="h-8 w-auto object-contain"
