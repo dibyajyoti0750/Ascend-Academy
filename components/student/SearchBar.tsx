@@ -10,8 +10,20 @@ export default function SearchBar() {
 
   const onSearch = (e: SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (!query.trim()) return;
-    router.push(`/course-list?query=${query}`);
+
+    const trimmedQuery = query.trim();
+
+    if (!trimmedQuery) {
+      router.push("/course-list");
+      return;
+    }
+
+    router.push(`/course-list?query=${trimmedQuery}`);
+  };
+
+  const clearSearch = () => {
+    setQuery("");
+    router.push("/course-list");
   };
 
   return (
@@ -30,7 +42,7 @@ export default function SearchBar() {
         {query && (
           <button
             type="button"
-            onClick={() => setQuery("")}
+            onClick={clearSearch}
             className="flex shrink-0 items-center justify-center text-muted-foreground transition hover:text-foreground"
           >
             <X className="size-4 sm:size-5" />
