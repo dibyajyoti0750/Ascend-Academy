@@ -9,12 +9,7 @@ import { useStore } from "@/store/educator-store";
 import { Course } from "@/types/course";
 import { useState } from "react";
 import { StarRating } from "./CourseCard";
-import {
-  ChevronDown,
-  CirclePlay,
-  PlayCircle,
-  TvMinimalPlay,
-} from "lucide-react";
+import { ChevronDown, PlayCircle, TvMinimalPlay } from "lucide-react";
 
 interface Props {
   courseData: Course;
