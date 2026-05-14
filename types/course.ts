@@ -1,3 +1,25 @@
+export interface Lecture {
+  lectureId: string;
+  lectureTitle: string;
+  lectureDuration: number;
+  lectureUrl: string;
+  isPreviewFree: boolean;
+  lectureOrder: number;
+}
+
+export interface Chapter {
+  chapterId: string;
+  chapterOrder: number;
+  chapterTitle: string;
+  chapterContent: Lecture[];
+}
+
+interface CourseRating {
+  userId: string;
+  rating: number;
+  _id: string;
+}
+
 export interface Course {
   _id: string;
   courseTitle: string;
@@ -6,12 +28,6 @@ export interface Course {
   discount: number;
   courseThumbnail: string;
   enrolledStudents: string[];
-  courseRatings: {
-    rating: number;
-  }[];
-  courseContent: {
-    chapterContent: {
-      lectureDuration: number;
-    }[];
-  }[];
+  courseRatings: CourseRating[];
+  courseContent: Chapter[];
 }

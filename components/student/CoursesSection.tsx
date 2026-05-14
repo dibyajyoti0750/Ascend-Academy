@@ -65,7 +65,7 @@ export default function CoursesSection() {
                 animationFillMode: "forwards",
               }}
             >
-              <CourseCard {...course} />
+              <CourseCard courseData={course} />
             </div>
           ))}
         </div>
