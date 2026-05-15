@@ -25,10 +25,23 @@ export function calcTotalLectures(content: Course["courseContent"]): number {
 export function calcChapterTime(chapter: {
   chapterContent: { lectureDuration: number }[];
 }) {
-  return chapter.chapterContent.reduce(
+  const totalMinutes = chapter.chapterContent.reduce(
     (accumulator, lecture) => accumulator + lecture.lectureDuration,
     0,
   );
+
+  const hrs = Math.floor(totalMinutes / 60);
+  const mins = totalMinutes % 60;
+
+  if (hrs > 0 && mins > 0) {
+    return `${hrs}h ${mins}m`;
+  }
+
+  if (hrs > 0) {
+    return `${hrs}h`;
+  }
+
+  return `${mins}m`;
 }
 
 export function humanizeDuration(minutes: number) {
