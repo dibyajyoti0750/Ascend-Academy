@@ -1,5 +1,6 @@
 "use client";
 
+import YouTube from "react-youtube";
 import {
   calcAverageRating,
   calcChapterTime,
@@ -40,6 +41,9 @@ export default function CourseDetails({ courseData }: Props) {
   const [openSections, setOpenSections] = useState<Record<number, boolean>>({
     0: true,
   });
+  const [playerData, setPlayerData] = useState<{
+    videoId: string;
+  } | null>(null);
 
   const [isAlreadyEnrolled] = useState(false);
 
@@ -201,7 +205,16 @@ export default function CourseDetails({ courseData }: Props) {
 
                             <div className="flex items-center gap-5">
                               {lecture.isPreviewFree && (
-                                <div className="flex items-center gap-1 text-blue-600 text-sm font-medium cursor-pointer hover:underline">
+                                <div
+                                  onClick={() =>
+                                    setPlayerData({
+                                      videoId:
+                                        lecture.lectureUrl?.split("/").pop() ??
+                                        "",
+                                    })
+                                  }
+                                  className="flex items-center gap-1 text-blue-600 text-sm font-medium cursor-pointer hover:underline"
+                                >
                                   <PlayCircle className="h-4 w-4" />
                                   Free Preview
                                 </div>
@@ -249,13 +262,28 @@ export default function CourseDetails({ courseData }: Props) {
           {/* RIGHT COLUMN */}
           <div className="lg:sticky lg:top-10">
             <Card className="shadow-custom-card overflow-hidden shadow-xl p-0">
-              <div className="relative aspect-video">
-                <Image
-                  src={courseData.courseThumbnail}
-                  alt="thumbnail"
-                  fill
-                  className="object-cover"
-                />
+              <div className="relative aspect-video w-full overflow-hidden rounded-xl">
+                {playerData ? (
+                  <YouTube
+                    videoId={playerData.videoId}
+                    className="h-full w-full"
+                    iframeClassName="h-full w-full"
+                    opts={{
+                      width: "100%",
+                      height: "100%",
+                      playerVars: {
+                        autoplay: 1,
+                      },
+                    }}
+                  />
+                ) : (
+                  <Image
+                    src={courseData.courseThumbnail}
+                    alt="thumbnail"
+                    fill
+                    className="object-cover"
+                  />
+                )}
               </div>
 
               <CardContent className="px-6 py-5">
