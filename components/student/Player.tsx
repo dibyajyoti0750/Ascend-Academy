@@ -1,6 +1,6 @@
 "use client";
 
-import YouTube from "react-youtube";
+import { dummyCourses } from "@/assets/assets";
 import {
   calcAverageRating,
   calcChapterTime,
@@ -8,46 +8,50 @@ import {
   calcTotalLectures,
   humanizeDuration,
 } from "@/lib/helpers";
-
-import { useStore } from "@/store/educator-store";
-import { Course } from "@/types/course";
-import { useState } from "react";
-import { StarRating } from "./CourseCard";
 import {
   BookOpen,
   ChevronDown,
   Clock,
-  Infinity,
-  MonitorCheck,
   PlayCircle,
   Star,
-  TimerReset,
-  Trophy,
   TvMinimalPlay,
 } from "lucide-react";
 import Image from "next/image";
+import { useState } from "react";
+import { StarRating } from "./CourseCard";
+import YouTube from "react-youtube";
 import Footer from "./Footer";
 
-import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
+import Rating from "../Rating";
 
 interface Props {
-  courseData: Course;
+  courseId: string;
 }
 
-export default function CourseDetails({ courseData }: Props) {
+export default function Player({ courseId }: Props) {
   const [openSections, setOpenSections] = useState<Record<number, boolean>>({
     0: true,
   });
+
   const [playerData, setPlayerData] = useState<{
     videoId: string;
+    chapter: number;
+    lecture: number;
+    title: string;
   } | null>(null);
 
-  const [isAlreadyEnrolled] = useState(false);
+  const courseData = dummyCourses.find(({ _id }) => _id === courseId);
 
-  const { currency } = useStore();
+  if (!courseData) {
+    return (
+      <section className="min-h-screen flex items-center justify-center bg-slate-50">
+        <p className="text-lg font-medium text-slate-600">Course not found</p>
+      </section>
+    );
+  }
 
   const toggleSection = (index: number) => {
     setOpenSections((prev) => ({
@@ -55,11 +59,6 @@ export default function CourseDetails({ courseData }: Props) {
       [index]: !prev[index],
     }));
   };
-
-  const discountedPrice = (
-    courseData.coursePrice -
-    (courseData.discount * courseData.coursePrice) / 100
-  ).toFixed(2);
 
   return (
     <section className="bg-slate-50 min-h-screen">
@@ -70,7 +69,7 @@ export default function CourseDetails({ courseData }: Props) {
             {/* HERO */}
             <div className="space-y-5">
               <Badge className="rounded-full px-4 py-1 text-sm">
-                ✨ Bestseller Course
+                Continue Learning...
               </Badge>
 
               <div>
@@ -78,15 +77,13 @@ export default function CourseDetails({ courseData }: Props) {
                   {courseData.courseTitle}
                 </h1>
 
-                <p
-                  className="mt-5 text-slate-600 text-base md:text-lg leading-7"
-                  dangerouslySetInnerHTML={{
-                    __html: `${courseData.courseDescription.slice(0, 220)}...`,
-                  }}
-                />
+                <p className="mt-5 text-slate-600 text-base md:text-lg leading-7">
+                  Continue your learning journey and track your course progress
+                  section by section.
+                </p>
               </div>
 
-              {/* Rating Row */}
+              {/* STATS */}
               <div className="flex flex-wrap items-center gap-4 text-sm md:text-base">
                 <div className="flex items-center gap-2">
                   <span className="font-semibold text-slate-900">
@@ -102,29 +99,20 @@ export default function CourseDetails({ courseData }: Props) {
 
                 <p className="text-slate-600">
                   <span className="font-medium text-slate-900">
-                    {courseData.courseRatings.length}
+                    {calcTotalLectures(courseData.courseContent)}
                   </span>{" "}
-                  {courseData.courseRatings.length > 1 ? "ratings" : "rating"}
+                  lectures
                 </p>
 
                 <Separator orientation="vertical" className="h-5" />
 
                 <p className="text-slate-600">
                   <span className="font-medium text-slate-900">
-                    {courseData.enrolledStudents.length}
+                    {calcTotalHours(courseData.courseContent)}
                   </span>{" "}
-                  {courseData.enrolledStudents.length > 1
-                    ? "students"
-                    : "students"}
+                  total hours
                 </p>
               </div>
-
-              <p className="text-slate-600">
-                Created by{" "}
-                <span className="font-semibold text-primary underline">
-                  Dibyajyoti
-                </span>
-              </p>
             </div>
 
             {/* COURSE CONTENT */}
@@ -132,7 +120,7 @@ export default function CourseDetails({ courseData }: Props) {
               <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
                 <div>
                   <h2 className="text-2xl font-bold text-slate-900">
-                    Course Content
+                    Course Structure
                   </h2>
 
                   <p className="text-slate-500 mt-1">
@@ -151,7 +139,7 @@ export default function CourseDetails({ courseData }: Props) {
                   >
                     <button
                       onClick={() => toggleSection(index)}
-                      className="w-full flex items-center justify-between px-5 text-left cursor-pointer outline-none transition"
+                      className="w-full flex items-center justify-between px-5 py-4 text-left cursor-pointer"
                     >
                       <div className="flex items-center gap-3">
                         <div className="h-9 w-9 rounded-full bg-slate-100 flex items-center justify-center">
@@ -200,23 +188,30 @@ export default function CourseDetails({ courseData }: Props) {
                                 <p className="font-medium text-slate-800">
                                   {lecture.lectureTitle}
                                 </p>
+
+                                <p className="text-sm text-slate-500 mt-1">
+                                  Lecture {idx + 1}
+                                </p>
                               </div>
                             </div>
 
                             <div className="flex items-center gap-5">
-                              {lecture.isPreviewFree && (
+                              {lecture.lectureUrl && (
                                 <div
                                   onClick={() =>
                                     setPlayerData({
                                       videoId:
                                         lecture.lectureUrl?.split("/").pop() ??
                                         "",
+                                      chapter: index + 1,
+                                      lecture: idx + 1,
+                                      title: lecture.lectureTitle,
                                     })
                                   }
                                   className="flex items-center gap-1 text-blue-600 text-sm font-medium cursor-pointer hover:underline"
                                 >
                                   <PlayCircle className="h-4 w-4" />
-                                  Free Preview
+                                  Watch
                                 </div>
                               )}
 
@@ -233,36 +228,14 @@ export default function CourseDetails({ courseData }: Props) {
               </div>
             </div>
 
-            {/* DESCRIPTION */}
-            <div className="mt-16">
-              <h3 className="text-2xl font-bold text-slate-900">
-                Course Description
-              </h3>
-
-              <div
-                className="text-slate-800 max-w-none mt-5"
-                dangerouslySetInnerHTML={{
-                  __html: courseData.courseDescription,
-                }}
-              />
-            </div>
-
-            <div className="mt-8 rounded-lg bg-yellow-50 border border-slate-200 p-4">
-              <p className="text-xs text-slate-600 leading-relaxed">
-                <span className="font-semibold text-slate-700">
-                  Disclaimer:
-                </span>{" "}
-                Results may vary based on individual effort, consistency, and
-                personal circumstances. The course content is for educational
-                purposes only.
-              </p>
-            </div>
+            {/* RATE COURSE */}
+            <Rating />
           </div>
 
           {/* RIGHT COLUMN */}
           <div className="lg:sticky lg:top-10">
-            <Card className="shadow-custom-card overflow-hidden shadow-xl p-0">
-              <div className="relative aspect-video w-full overflow-hidden rounded-xl">
+            <Card className="overflow-hidden shadow-xl p-0 border-slate-200">
+              <div className="relative aspect-video w-full overflow-hidden bg-black">
                 {playerData ? (
                   <YouTube
                     videoId={playerData.videoId}
@@ -287,91 +260,90 @@ export default function CourseDetails({ courseData }: Props) {
               </div>
 
               <CardContent className="px-6 py-5">
-                <div className="flex items-center gap-2 text-red-500 bg-red-50 border border-red-100 rounded-lg px-4 py-3">
-                  <TimerReset className="h-5 w-5" />
-                  <p className="font-medium text-sm">
-                    Price increases in 4 days
-                  </p>
-                </div>
+                {playerData ? (
+                  <div>
+                    <Badge variant="secondary" className="mb-4">
+                      Chapter {playerData.chapter} • Lecture{" "}
+                      {playerData.lecture}
+                    </Badge>
 
-                {/* PRICE */}
-                <div className="mt-6 flex items-end gap-3 flex-wrap">
-                  <h2 className="text-4xl font-bold text-slate-900">
-                    {currency}
-                    {discountedPrice}
-                  </h2>
+                    <h2 className="text-2xl font-bold text-slate-900 leading-snug">
+                      {playerData.title}
+                    </h2>
 
-                  <p className="text-lg text-slate-400 line-through">
-                    {currency}
-                    {courseData.coursePrice}
-                  </p>
+                    <div className="grid grid-cols-3 gap-4 mt-6">
+                      <div className="rounded-xl border bg-slate-50 p-3 text-center">
+                        <BookOpen className="h-5 w-5 mx-auto text-slate-700" />
 
-                  <Badge
-                    variant="secondary"
-                    className="mb-1 bg-green-200 text-green-700"
-                  >
-                    {courseData.discount}% OFF
-                  </Badge>
-                </div>
+                        <p className="mt-2 text-sm font-semibold text-slate-900">
+                          {courseData.courseContent.length}
+                        </p>
 
-                {/* STATS */}
-                <div className="grid grid-cols-3 gap-4 mt-6">
-                  <div className="rounded-xl border bg-slate-50 p-3 text-center">
-                    <Star className="h-5 w-5 mx-auto fill-yellow-400 text-yellow-400" />
-                    <p className="mt-2 text-sm font-semibold text-slate-900">
-                      {calcAverageRating(courseData.courseRatings)}
-                    </p>
-                  </div>
+                        <p className="text-xs text-slate-500 mt-1">Sections</p>
+                      </div>
 
-                  <div className="rounded-xl border bg-slate-50 p-3 text-center">
-                    <Clock className="h-5 w-5 mx-auto text-slate-700" />
-                    <p className="mt-2 text-sm font-semibold text-slate-900">
-                      {calcTotalHours(courseData.courseContent)}h
-                    </p>
-                  </div>
+                      <div className="rounded-xl border bg-slate-50 p-3 text-center">
+                        <Clock className="h-5 w-5 mx-auto text-slate-700" />
 
-                  <div className="rounded-xl border bg-slate-50 p-3 text-center">
-                    <BookOpen className="h-5 w-5 mx-auto text-slate-700" />
-                    <p className="mt-2 text-sm font-semibold text-slate-900">
-                      {calcTotalLectures(courseData.courseContent)}
-                    </p>
-                  </div>
-                </div>
+                        <p className="mt-2 text-sm font-semibold text-slate-900">
+                          {calcTotalHours(courseData.courseContent)}h
+                        </p>
 
-                {/* CTA */}
-                <Button className="w-full mt-7 h-12 text-base font-semibold cursor-pointer">
-                  {isAlreadyEnrolled ? "Already Enrolled" : "Enroll Now"}
-                </Button>
+                        <p className="text-xs text-slate-500 mt-1">Hours</p>
+                      </div>
 
-                {/* FEATURES */}
-                <div className="mt-8">
-                  <h4 className="font-semibold text-lg text-slate-900">
-                    This course includes
-                  </h4>
+                      <div className="rounded-xl border bg-slate-50 p-3 text-center">
+                        <Star className="h-5 w-5 mx-auto fill-yellow-400 text-yellow-400" />
 
-                  <div className="mt-5 space-y-4">
-                    <div className="flex items-start gap-3">
-                      <Infinity className="h-5 w-5 text-primary" />
-                      <p className="text-slate-600">
-                        Lifetime access with future updates
-                      </p>
-                    </div>
+                        <p className="mt-2 text-sm font-semibold text-slate-900">
+                          {calcAverageRating(courseData.courseRatings)}
+                        </p>
 
-                    <div className="flex items-start gap-3">
-                      <MonitorCheck className="h-5 w-5 text-primary" />
-                      <p className="text-slate-600">
-                        Access on mobile, tablet & desktop
-                      </p>
-                    </div>
-
-                    <div className="flex items-start gap-3">
-                      <Trophy className="h-5 w-5 text-primary" />
-                      <p className="text-slate-600">
-                        Certificate of completion
-                      </p>
+                        <p className="text-xs text-slate-500 mt-1">Rating</p>
+                      </div>
                     </div>
                   </div>
-                </div>
+                ) : (
+                  <div>
+                    <Badge className="mb-4">Start Watching</Badge>
+
+                    <h2 className="text-2xl font-bold text-slate-900 leading-snug">
+                      Pick a lecture from the course structure to begin learning
+                    </h2>
+
+                    <div className="grid grid-cols-3 gap-4 mt-6">
+                      <div className="rounded-xl border bg-slate-50 p-3 text-center">
+                        <BookOpen className="h-5 w-5 mx-auto text-slate-700" />
+
+                        <p className="mt-2 text-sm font-semibold text-slate-900">
+                          {courseData.courseContent.length}
+                        </p>
+
+                        <p className="text-xs text-slate-500 mt-1">Sections</p>
+                      </div>
+
+                      <div className="rounded-xl border bg-slate-50 p-3 text-center">
+                        <Clock className="h-5 w-5 mx-auto text-slate-700" />
+
+                        <p className="mt-2 text-sm font-semibold text-slate-900">
+                          {calcTotalHours(courseData.courseContent)}h
+                        </p>
+
+                        <p className="text-xs text-slate-500 mt-1">Hours</p>
+                      </div>
+
+                      <div className="rounded-xl border bg-slate-50 p-3 text-center">
+                        <Star className="h-5 w-5 mx-auto fill-yellow-400 text-yellow-400" />
+
+                        <p className="mt-2 text-sm font-semibold text-slate-900">
+                          {calcAverageRating(courseData.courseRatings)}
+                        </p>
+
+                        <p className="text-xs text-slate-500 mt-1">Rating</p>
+                      </div>
+                    </div>
+                  </div>
+                )}
               </CardContent>
             </Card>
           </div>
