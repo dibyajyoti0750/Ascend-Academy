@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { Bricolage_Grotesque } from "next/font/google";
 
 import "@/app/globals.css";
+import Navbar from "@/components/educator/Navbar";
+import { ClerkProvider } from "@clerk/nextjs";
 
 const bricolage = Bricolage_Grotesque({
   subsets: ["latin"],
@@ -21,7 +23,10 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${bricolage.variable} h-full antialiased`}>
       <body className="min-h-full flex flex-col font-(--font-bricolage)">
-        <main className="flex-1">{children}</main>
+        <ClerkProvider>
+          <Navbar />
+          <main className="flex-1">{children}</main>
+        </ClerkProvider>
       </body>
     </html>
   );

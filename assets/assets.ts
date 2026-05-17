@@ -67,6 +67,17 @@ export const people = [
   },
 ];
 
+export const dummyEducatorData = {
+  _id: "675ac1512100b91a6d9b8b24",
+  name: "Dibyajyoti",
+  email: "dibyajyotipramanick0750@gmail.com",
+  imageUrl:
+    "https://img.clerk.com/eyJ0eXBlIjoicHJveHkiLCJzcmMiOiJodHRwczovL2ltYWdlcy5jbGVyay5kZXYvb2F1dGhfZ29vZ2xlL2ltZ18yclFkaDBOMmFqWnBoTTRBOXZUanZxVlo0aXYifQ",
+  createdAt: "2026-17-17T10:56:17.930Z",
+  updatedAt: "2026-17-17T10:56:17.930Z",
+  __v: 0,
+};
+
 export const dummyCourses = [
   {
     _id: "605c72efb3f1c2b1f8e4e1a1",

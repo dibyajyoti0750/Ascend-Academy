@@ -52,8 +52,13 @@ const Navbar = () => {
       <div className="flex h-16 items-center justify-between px-4 lg:grid lg:grid-cols-3 lg:px-16">
         {/* Left */}
         <div className="flex items-center gap-4 lg:gap-6">
-          <Link href="/" className="flex shrink-0 items-center gap-1">
-            <Navigation2 size={24} className="shrink-0" />
+          <Link
+            href={"/"}
+            className="flex items-center gap-3 transition-opacity hover:opacity-80"
+          >
+            <div className="rounded-xl bg-slate-900 p-3 text-white">
+              <Navigation2 size={20} />
+            </div>
 
             <span className="hidden text-2xl font-bold tracking-tight sm:block">
               Ascend Academy
