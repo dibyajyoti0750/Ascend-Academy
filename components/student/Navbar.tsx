@@ -49,7 +49,7 @@ const Navbar = () => {
 
   return (
     <header className="border-b">
-      <div className="flex h-16 items-center justify-between px-4 lg:grid lg:grid-cols-3 lg:px-16">
+      <div className="flex h-18 items-center justify-between px-4 lg:px-16 lg:grid lg:grid-cols-3">
         {/* Left */}
         <div className="flex items-center gap-4 lg:gap-6">
           <Link

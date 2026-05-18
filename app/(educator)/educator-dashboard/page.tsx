@@ -1,3 +1,5 @@
+import Dashboard from "@/components/educator/Dashboard";
+
 export default function page() {
-  return <div>Educator Dashboard</div>;
+  return <Dashboard />;
 }
