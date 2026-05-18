@@ -59,11 +59,11 @@ export default async function Page({ searchParams }: Props) {
         {filteredCourses.length > 0 ? (
           <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
             {filteredCourses.map((course, index) => (
-              <CourseCard key={index} {...course} />
+              <CourseCard key={index} courseData={course} />
             ))}
           </div>
         ) : (
-          <div className="flex min-h-[400px] flex-col items-center justify-center rounded-3xl border border-dashed border-zinc-300 bg-white px-6 text-center">
+          <div className="flex min-h-100 flex-col items-center justify-center rounded-3xl border border-dashed border-zinc-300 bg-white px-6 text-center">
             <h2 className="text-2xl font-semibold text-zinc-900">
               No courses found
             </h2>

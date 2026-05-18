@@ -21,15 +21,21 @@ export default function Footer() {
 
         {/* Center Links */}
         <div className="flex items-center gap-6 text-sm text-gray-500">
-          <Link href="#" className="transition-colors hover:text-gray-900">
+          <Link href="/" className="transition-colors hover:text-gray-900">
             Home
           </Link>
 
-          <Link href="#" className="transition-colors hover:text-gray-900">
+          <Link
+            href="/course-list"
+            className="transition-colors hover:text-gray-900"
+          >
             Courses
           </Link>
 
-          <Link href="#" className="transition-colors hover:text-gray-900">
+          <Link
+            href="/contact"
+            className="transition-colors hover:text-gray-900"
+          >
             Contact
           </Link>
         </div>

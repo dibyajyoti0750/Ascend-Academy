@@ -7,5 +7,5 @@ type Store = {
 
 export const useStore = create<Store>(() => ({
   isEducator: true,
-  currency: "$",
+  currency: "₹",
 }));
