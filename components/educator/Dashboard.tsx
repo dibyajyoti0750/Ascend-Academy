@@ -1,6 +1,6 @@
 "use client";
 
-import { BookOpen, IndianRupee, Users, TrendingUp } from "lucide-react";
+import { BookOpen, Users, TrendingUp, DollarSign } from "lucide-react";
 
 import { useStore } from "@/store/educator-store";
 
@@ -35,7 +35,7 @@ export default function Dashboard({ dashboardData }: Props) {
     {
       title: "Total Revenue",
       value: `${currency}${dashboardData.totalEarnings}`,
-      icon: IndianRupee,
+      icon: DollarSign,
       description: "+12.5% from last month",
     },
     {
@@ -184,7 +184,7 @@ export default function Dashboard({ dashboardData }: Props) {
                   </div>
 
                   <div className="rounded-full bg-white/20 p-3">
-                    <IndianRupee className="h-6 w-6" />
+                    <DollarSign className="h-6 w-6" />
                   </div>
                 </div>
               </div>

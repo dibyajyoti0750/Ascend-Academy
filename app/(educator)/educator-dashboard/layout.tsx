@@ -2,10 +2,14 @@ import type { Metadata } from "next";
 import { Bricolage_Grotesque } from "next/font/google";
 
 import "@/app/globals.css";
-import Navbar from "@/components/educator/Navbar";
 import { ClerkProvider } from "@clerk/nextjs";
 import Footer from "@/components/educator/Footer";
-import Sidebar from "@/components/educator/Sidebar";
+import {
+  SidebarInset,
+  SidebarProvider,
+  SidebarTrigger,
+} from "@/components/ui/sidebar";
+import { AppSidebar } from "@/components/educator/AppSidebar";
 
 const bricolage = Bricolage_Grotesque({
   subsets: ["latin"],
@@ -24,15 +28,23 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={`${bricolage.variable} h-full antialiased`}>
-      <body className="min-h-full flex flex-col font-(--font-bricolage)">
+      <body className="min-h-screen font-(--font-bricolage)">
         <ClerkProvider>
-          <Navbar />
-          <section className="min-h-screen bg-white flex">
-            <Sidebar />
+          <SidebarProvider>
+            <AppSidebar />
 
-            <main className="flex-1 p-6">{children}</main>
-          </section>
-          <Footer />
+            <SidebarInset>
+              {/* Top Bar */}
+              <div className="sticky top-0 z-40 flex h-16 items-center border-b bg-white px-6">
+                <SidebarTrigger />
+              </div>
+
+              {/* Page Content */}
+              <div>{children}</div>
+
+              <Footer />
+            </SidebarInset>
+          </SidebarProvider>
         </ClerkProvider>
       </body>
     </html>
