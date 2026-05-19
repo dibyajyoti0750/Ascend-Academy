@@ -216,7 +216,7 @@ export default function MyCourses({ courses }: Props) {
                           <div className="flex items-center gap-2 text-sm text-muted-foreground">
                             <CalendarDays className="h-4 w-4" />
 
-                            {new Date(course.createdAt).toLocaleDateString()}
+                            {new Date(course.createdAt).toDateString()}
                           </div>
                         </TableCell>
 

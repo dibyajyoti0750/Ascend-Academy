@@ -3,18 +3,12 @@
 import Link from "next/link";
 import { SignOutButton, UserButton, useUser } from "@clerk/nextjs";
 import {
-  BookOpen,
-  CirclePlus,
   CircleUserRound,
-  GraduationCap,
   LayoutDashboard,
   Library,
   LogOut,
-  MessageSquare,
   Navigation2,
   PlusSquare,
-  Settings,
-  Trophy,
   Users,
 } from "lucide-react";
 

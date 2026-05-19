@@ -35,18 +35,3 @@ export interface Course {
   updatedAt: string;
   __v: number;
 }
-
-interface EnrolledStudentData {
-  courseTitle: string;
-  student: {
-    _id: string;
-    name: string;
-    imageUrl: string;
-  };
-}
-
-export interface DashboardData {
-  totalEarnings: number;
-  enrolledStudentsData: EnrolledStudentData[];
-  totalCourses: number;
-}
