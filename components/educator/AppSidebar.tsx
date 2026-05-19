@@ -1,9 +1,10 @@
 "use client";
 
 import Link from "next/link";
-import { UserButton, useUser } from "@clerk/nextjs";
+import { SignOutButton, UserButton, useUser } from "@clerk/nextjs";
 import {
   BookOpen,
+  CirclePlus,
   CircleUserRound,
   GraduationCap,
   LayoutDashboard,
@@ -11,8 +12,10 @@ import {
   LogOut,
   MessageSquare,
   Navigation2,
+  PlusSquare,
   Settings,
   Trophy,
+  Users,
 } from "lucide-react";
 
 import {
@@ -35,37 +38,19 @@ const mainMenu = [
     icon: LayoutDashboard,
   },
   {
-    title: "My Courses",
-    url: "/educator-dashboard/my-courses",
-    icon: BookOpen,
+    title: "Add Course",
+    url: "/educator-dashboard/add-course",
+    icon: PlusSquare,
   },
   {
-    title: "Browse Courses",
-    url: "/educator-dashboard/browse-courses",
+    title: "My Courses",
+    url: "/educator-dashboard/my-courses",
     icon: Library,
   },
   {
-    title: "Certificates",
-    url: "/educator-dashboard/certificates",
-    icon: GraduationCap,
-  },
-];
-
-const learningMenu = [
-  {
-    title: "Leaderboard",
-    url: "/educator-dashboard/leaderboard",
-    icon: Trophy,
-  },
-  {
-    title: "Messages",
-    url: "/educator-dashboard/messages",
-    icon: MessageSquare,
-  },
-  {
-    title: "Settings",
-    url: "/educator-dashboard/settings",
-    icon: Settings,
+    title: "Students Enrolled",
+    url: "/educator-dashboard/students-enrolled",
+    icon: Users,
   },
 ];
 
@@ -120,31 +105,6 @@ export function AppSidebar() {
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
-
-        <SidebarGroup className="mt-6">
-          <SidebarGroupLabel className="text-slate-500">
-            Learning
-          </SidebarGroupLabel>
-
-          <SidebarGroupContent>
-            <SidebarMenu>
-              {learningMenu.map((item) => (
-                <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton
-                    asChild
-                    className="h-11 rounded-xl text-slate-700 transition-colors hover:bg-slate-100 hover:text-slate-900"
-                  >
-                    <Link href={item.url}>
-                      <item.icon className="h-4 w-4" />
-
-                      <span>{item.title}</span>
-                    </Link>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-              ))}
-            </SidebarMenu>
-          </SidebarGroupContent>
-        </SidebarGroup>
       </SidebarContent>
 
       {/* Footer */}
@@ -163,15 +123,12 @@ export function AppSidebar() {
           </div>
         </div>
 
-        <SidebarMenu className="mt-4">
-          <SidebarMenuItem>
-            <SidebarMenuButton className="h-11 rounded-xl text-slate-700 transition-colors hover:bg-red-50 hover:text-red-600">
-              <LogOut className="h-4 w-4" />
-
-              <span>Logout</span>
-            </SidebarMenuButton>
-          </SidebarMenuItem>
-        </SidebarMenu>
+        <SignOutButton>
+          <button className="mt-2 flex h-11 w-full cursor-pointer items-center gap-2 rounded-xl px-3 text-sm text-slate-700 transition-colors hover:bg-red-50 hover:text-red-600">
+            <LogOut className="h-4 w-4" />
+            <span>Logout</span>
+          </button>
+        </SignOutButton>
       </SidebarFooter>
     </Sidebar>
   );
