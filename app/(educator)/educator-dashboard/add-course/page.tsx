@@ -1,3 +1,5 @@
+import AddCourse from "@/components/educator/AddCourse";
+
 export default function page() {
-  return <div>Add course</div>;
+  return <AddCourse />;
 }
