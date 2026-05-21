@@ -1,7 +1,7 @@
 "use client";
 
 import "quill/dist/quill.snow.css";
-import { useEffect, useRef } from "react";
+import { ChangeEvent, useEffect, useRef, useState } from "react";
 import { Plus, Trash2 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -10,12 +10,122 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
+interface Lecture {
+  lectureTitle: string;
+  lectureDuration: string;
+  lectureUrl: string;
+  isPreviewFree: boolean;
+}
+
+interface Chapter {
+  chapterTitle: string;
+  lectures: Lecture[];
+}
+
 export default function AddCourse() {
+  const [courseData, setCourseData] = useState({
+    courseTitle: "",
+    coursePrice: "",
+    discount: "",
+    thumbnail: null as File | null,
+    courseDescription: "",
+    courseRequirements: "",
+  });
+
+  const [chapters, setChapters] = useState<Chapter[]>([
+    {
+      chapterTitle: "",
+      lectures: [
+        {
+          lectureTitle: "",
+          lectureDuration: "",
+          lectureUrl: "",
+          isPreviewFree: false,
+        },
+      ],
+    },
+  ]);
+
   const descriptionEditorRef = useRef<HTMLDivElement>(null);
   const requirementsEditorRef = useRef<HTMLDivElement>(null);
 
   const descriptionQuillRef = useRef<any>(null);
   const requirementsQuillRef = useRef<any>(null);
+
+  // ---------------- COURSE INPUT ----------------
+
+  const handleCourseChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setCourseData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+  };
+
+  // ---------------- CHAPTERS ----------------
+
+  const addNewChapter = () => {
+    setChapters((prev) => [
+      ...prev,
+      {
+        chapterTitle: "",
+        lectures: [
+          {
+            lectureTitle: "",
+            lectureDuration: "",
+            lectureUrl: "",
+            isPreviewFree: false,
+          },
+        ],
+      },
+    ]);
+  };
+
+  const removeChapter = (chapterIndex: number) => {
+    setChapters((prev) => prev.filter((_, index) => index !== chapterIndex));
+  };
+
+  const handleChapterTitle = (chapterIndex: number, value: string) => {
+    const updated = [...chapters];
+    updated[chapterIndex].chapterTitle = value;
+    setChapters(updated);
+  };
+
+  // ---------------- LECTURES ----------------
+
+  const addLecture = (chapterIndex: number) => {
+    const updated = [...chapters];
+
+    updated[chapterIndex].lectures.push({
+      lectureTitle: "",
+      lectureDuration: "",
+      lectureUrl: "",
+      isPreviewFree: false,
+    });
+
+    setChapters(updated);
+  };
+
+  const removeLecture = (chapterIndex: number, lectureIndex: number) => {
+    const updated = [...chapters];
+
+    updated[chapterIndex].lectures = updated[chapterIndex].lectures.filter(
+      (_, index) => index !== lectureIndex,
+    );
+
+    setChapters(updated);
+  };
+
+  const handleLectureChange = (
+    chapterIndex: number,
+    lectureIndex: number,
+    field: keyof Lecture,
+    value: string | boolean,
+  ) => {
+    const updated = [...chapters];
+
+    updated[chapterIndex].lectures[lectureIndex][field] = value as never;
+
+    setChapters(updated);
+  };
+
+  // ---------------- SUBMIT ----------------
 
   useEffect(() => {
     const initQuill = async () => {
@@ -34,6 +144,13 @@ export default function AddCourse() {
             ],
           },
           placeholder: "Write your course description...",
+        });
+
+        descriptionQuillRef.current.on("text-change", () => {
+          setCourseData((prev) => ({
+            ...prev,
+            courseDescription: descriptionQuillRef.current.root.innerHTML,
+          }));
         });
       }
 
@@ -54,6 +171,13 @@ export default function AddCourse() {
             placeholder: "Write your course requirements...",
           },
         );
+
+        requirementsQuillRef.current.on("text-change", () => {
+          setCourseData((prev) => ({
+            ...prev,
+            courseRequirements: requirementsQuillRef.current.root.innerHTML,
+          }));
+        });
       }
     };
 
@@ -88,6 +212,9 @@ export default function AddCourse() {
                   <Label htmlFor="courseTitle">Course Title</Label>
 
                   <Input
+                    name="courseTitle"
+                    value={courseData.courseTitle}
+                    onChange={handleCourseChange}
                     placeholder="Full Stack MERN Bootcamp"
                     className="h-11"
                   />
@@ -97,14 +224,28 @@ export default function AddCourse() {
                 <div className="space-y-2">
                   <Label htmlFor="coursePrice">Course Price</Label>
 
-                  <Input type="number" placeholder="4999" className="h-11" />
+                  <Input
+                    name="coursePrice"
+                    value={courseData.coursePrice}
+                    onChange={handleCourseChange}
+                    type="number"
+                    placeholder="4999"
+                    className="h-11"
+                  />
                 </div>
 
                 {/* DISCOUNT */}
                 <div className="space-y-2">
                   <Label htmlFor="discount">Discount (%)</Label>
 
-                  <Input type="number" placeholder="20" className="h-11" />
+                  <Input
+                    name="discount"
+                    value={courseData.discount}
+                    onChange={handleCourseChange}
+                    type="number"
+                    placeholder="20"
+                    className="h-11"
+                  />
                 </div>
 
                 {/* THUMBNAIL */}
@@ -114,6 +255,12 @@ export default function AddCourse() {
                   <Input
                     type="file"
                     accept="image/*"
+                    onChange={(e) =>
+                      setCourseData((prev) => ({
+                        ...prev,
+                        thumbnail: e.target.files?.[0] || null,
+                      }))
+                    }
                     className="cursor-pointer"
                   />
                 </div>
@@ -144,80 +291,156 @@ export default function AddCourse() {
             <div className="flex items-center justify-between">
               <h2 className="text-2xl font-bold">Chapters</h2>
 
-              <Button type="button">
+              <Button
+                onClick={addNewChapter}
+                type="button"
+                className="cursor-pointer hover:opacity-90"
+              >
                 <Plus className="mr-2 h-4 w-4" />
                 Add Chapter
               </Button>
             </div>
 
-            <Card className="rounded-2xl shadow-sm">
-              <CardContent className="space-y-6 p-6">
-                <div className="flex items-center gap-4">
-                  <div className="flex-1 space-y-2">
-                    <Label>Chapter Title</Label>
+            {chapters.map((chapter, chapterIndex) => (
+              <Card key={chapterIndex} className="rounded-2xl shadow-sm">
+                <CardContent className="space-y-6 p-6">
+                  <div className="flex items-center gap-4">
+                    <div className="flex-1 space-y-2">
+                      <Label>Chapter Title</Label>
 
-                    <Input />
-                  </div>
+                      <Input
+                        value={chapter.chapterTitle}
+                        onChange={(e) =>
+                          handleChapterTitle(chapterIndex, e.target.value)
+                        }
+                        placeholder={`Chapter ${chapterIndex + 1}`}
+                      />
+                    </div>
 
-                  <Button
-                    type="button"
-                    variant="destructive"
-                    size="icon"
-                    className="mt-7"
-                  >
-                    <Trash2 className="h-4 w-4" />
-                  </Button>
-                </div>
-
-                {/* LECTURES */}
-                <div className="space-y-6">
-                  <div className="flex items-center justify-between">
-                    <h3 className="text-lg font-semibold">Lectures</h3>
-
-                    <Button type="button" variant="secondary">
-                      <Plus className="mr-2 h-4 w-4" />
-                      Add Lecture
+                    <Button
+                      onClick={() => removeChapter(chapterIndex)}
+                      type="button"
+                      variant="destructive"
+                      size="icon"
+                      className="mt-5 cursor-pointer"
+                    >
+                      <Trash2 className="h-4 w-4" />
                     </Button>
                   </div>
 
-                  <div className="space-y-4 rounded-xl border bg-background p-5">
+                  {/* LECTURES */}
+                  <div className="space-y-6">
                     <div className="flex items-center justify-between">
-                      <h4 className="font-medium">Lecture</h4>
+                      <h3 className="text-lg font-semibold">Lectures</h3>
 
-                      <Button type="button" variant="ghost" size="icon">
-                        <Trash2 className="h-4 w-4 text-red-500" />
+                      <Button
+                        type="button"
+                        variant="secondary"
+                        className="cursor-pointer"
+                        onClick={() => addLecture(chapterIndex)}
+                      >
+                        <Plus className="mr-2 h-4 w-4" />
+                        Add Lecture
                       </Button>
                     </div>
 
-                    <div className="grid gap-4 md:grid-cols-2">
-                      <div className="space-y-2">
-                        <Label>Lecture Title</Label>
+                    {chapter.lectures.map((lecture, lectureIndex) => (
+                      <div
+                        key={lectureIndex}
+                        className="space-y-4 rounded-xl border bg-background p-5"
+                      >
+                        <div className="flex items-center justify-between">
+                          <h4 className="font-medium">
+                            Lecture {lectureIndex + 1}
+                          </h4>
 
-                        <Input placeholder="Introduction" />
+                          <Button
+                            type="button"
+                            variant="ghost"
+                            size="icon"
+                            className="cursor-pointer"
+                            onClick={() =>
+                              removeLecture(chapterIndex, lectureIndex)
+                            }
+                          >
+                            <Trash2 className="h-4 w-4 text-red-500" />
+                          </Button>
+                        </div>
+
+                        <div className="grid gap-4 md:grid-cols-2">
+                          <div className="space-y-2">
+                            <Label>Lecture Title</Label>
+
+                            <Input
+                              value={lecture.lectureTitle}
+                              onChange={(e) =>
+                                handleLectureChange(
+                                  chapterIndex,
+                                  lectureIndex,
+                                  "lectureTitle",
+                                  e.target.value,
+                                )
+                              }
+                              placeholder="Introduction"
+                            />
+                          </div>
+
+                          <div className="space-y-2">
+                            <Label>Duration</Label>
+
+                            <Input
+                              value={lecture.lectureDuration}
+                              onChange={(e) =>
+                                handleLectureChange(
+                                  chapterIndex,
+                                  lectureIndex,
+                                  "lectureDuration",
+                                  e.target.value,
+                                )
+                              }
+                              placeholder="10 mins"
+                            />
+                          </div>
+
+                          <div className="space-y-2 md:col-span-2">
+                            <Label>Lecture URL</Label>
+
+                            <Input
+                              value={lecture.lectureUrl}
+                              onChange={(e) =>
+                                handleLectureChange(
+                                  chapterIndex,
+                                  lectureIndex,
+                                  "lectureUrl",
+                                  e.target.value,
+                                )
+                              }
+                              placeholder="https://..."
+                            />
+                          </div>
+
+                          <div className="flex items-center space-x-2">
+                            <Checkbox
+                              checked={lecture.isPreviewFree}
+                              onCheckedChange={(checked) =>
+                                handleLectureChange(
+                                  chapterIndex,
+                                  lectureIndex,
+                                  "isPreviewFree",
+                                  Boolean(checked),
+                                )
+                              }
+                            />
+
+                            <Label>Free Preview</Label>
+                          </div>
+                        </div>
                       </div>
-
-                      <div className="space-y-2">
-                        <Label>Duration</Label>
-
-                        <Input placeholder="10 mins" />
-                      </div>
-
-                      <div className="space-y-2 md:col-span-2">
-                        <Label>Lecture URL</Label>
-
-                        <Input placeholder="https://..." />
-                      </div>
-
-                      <div className="flex items-center space-x-2">
-                        <Checkbox />
-
-                        <Label>Free Preview</Label>
-                      </div>
-                    </div>
+                    ))}
                   </div>
-                </div>
-              </CardContent>
-            </Card>
+                </CardContent>
+              </Card>
+            ))}
           </div>
 
           {/* SUBMIT */}
