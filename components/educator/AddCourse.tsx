@@ -1,7 +1,7 @@
 "use client";
 
 import "quill/dist/quill.snow.css";
-import { ChangeEvent, useEffect, useRef, useState } from "react";
+import { ChangeEvent, SubmitEvent, useEffect, useRef, useState } from "react";
 import { Plus, Trash2 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -126,6 +126,16 @@ export default function AddCourse() {
   };
 
   // ---------------- SUBMIT ----------------
+  const handleSubmit = (e: SubmitEvent) => {
+    e.preventDefault();
+
+    const finalData = {
+      ...courseData,
+      chapters,
+    };
+
+    console.log(finalData);
+  };
 
   useEffect(() => {
     const initQuill = async () => {
@@ -192,7 +202,7 @@ export default function AddCourse() {
   return (
     <section className="min-h-screen bg-muted/30 p-6">
       <div className="mx-auto max-w-6xl">
-        <form className="space-y-8">
+        <form onSubmit={handleSubmit} className="space-y-8">
           {/* HEADER */}
           <div className="space-y-2">
             <h1 className="text-3xl font-bold">Add New Course</h1>
