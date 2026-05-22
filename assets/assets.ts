@@ -633,6 +633,7 @@ export const dummyDashboardData = {
   enrolledStudentsData: [
     {
       courseTitle: "Introduction to JavaScript",
+      purchaseDate: "2026-05-22",
       student: {
         _id: "user_2qQlvXyr02B4Bq6hT0Gvaa5fT9V",
         name: "Great Stack",
@@ -642,6 +643,7 @@ export const dummyDashboardData = {
     },
     {
       courseTitle: "Advanced Python Programming",
+      purchaseDate: "2026-05-22",
       student: {
         _id: "user_2qQlvXyr02B4Bq6hT0Gvaa5fT9V",
         name: "Great Stack",
@@ -651,6 +653,7 @@ export const dummyDashboardData = {
     },
     {
       courseTitle: "Web Development Bootcamp",
+      purchaseDate: "2026-05-22",
       student: {
         _id: "user_2qQlvXyr02B4Bq6hT0Gvaa5fT9V",
         name: "Great Stack",
@@ -660,6 +663,7 @@ export const dummyDashboardData = {
     },
     {
       courseTitle: "Data Science with Python",
+      purchaseDate: "2026-05-22",
       student: {
         _id: "user_2qQlvXyr02B4Bq6hT0Gvaa5fT9V",
         name: "Great Stack",
@@ -669,6 +673,7 @@ export const dummyDashboardData = {
     },
     {
       courseTitle: "Cybersecurity Basics",
+      purchaseDate: "2026-05-22",
       student: {
         _id: "user_2qQlvXyr02B4Bq6hT0Gvaa5fT9V",
         name: "Great Stack",
