@@ -29,7 +29,7 @@ const connectDB = async () => {
 
   if (!cached.promise) {
     cached.promise = mongoose.connect(MONGODB_URI, {
-      dbName: "your-db-name",
+      dbName: "ascend-academy",
     });
   }
 
