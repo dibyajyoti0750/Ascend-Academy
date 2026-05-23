@@ -54,12 +54,6 @@ export async function POST(req: Request) {
       const email = email_addresses[0]?.email_address?.toLowerCase().trim();
       const adminEmail = process.env.ADMIN_EMAIL?.toLowerCase().trim();
 
-      console.log({
-        email,
-        adminEmail,
-        isMatch: email === adminEmail,
-      });
-
       await User.create({
         clerkId: id,
         email,

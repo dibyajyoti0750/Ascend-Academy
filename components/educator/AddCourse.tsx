@@ -27,7 +27,10 @@ export default function AddCourse() {
     courseTitle: "",
     coursePrice: "",
     discount: "",
+    courseLevel: "beginner",
+
     thumbnail: null as File | null,
+
     courseDescription: "",
     courseRequirements: "",
   });
@@ -126,15 +129,52 @@ export default function AddCourse() {
   };
 
   // ---------------- SUBMIT ----------------
-  const handleSubmit = (e: SubmitEvent) => {
+  const handleSubmit = async (e: SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    const finalData = {
-      ...courseData,
-      chapters,
-    };
+    try {
+      const formattedCourseContent = chapters.map((chapter, chapterIndex) => ({
+        chapterOrder: chapterIndex + 1,
+        chapterTitle: chapter.chapterTitle,
 
-    console.log(finalData);
+        chapterContent: chapter.lectures.map((lecture, lectureIndex) => ({
+          lectureOrder: lectureIndex + 1,
+          lectureTitle: lecture.lectureTitle,
+          lectureDuration: Number(lecture.lectureDuration),
+          lectureUrl: lecture.lectureUrl,
+          isPreviewFree: lecture.isPreviewFree,
+        })),
+      }));
+
+      const finalCourseData = {
+        courseTitle: courseData.courseTitle,
+        courseDescription: courseData.courseDescription,
+        courseRequirements: courseData.courseRequirements,
+        coursePrice: Number(courseData.coursePrice),
+        discount: Number(courseData.discount),
+        courseLevel: courseData.courseLevel,
+        courseContent: formattedCourseContent,
+      };
+
+      const formData = new FormData();
+
+      formData.append("courseData", JSON.stringify(finalCourseData));
+
+      if (courseData.thumbnail) {
+        formData.append("thumbnail", courseData.thumbnail);
+      }
+
+      const response = await fetch("/api/courses", {
+        method: "POST",
+        body: formData,
+      });
+
+      const data = await response.json();
+
+      console.log(data);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   useEffect(() => {
