@@ -51,11 +51,17 @@ export async function POST(req: Request) {
       const { id, email_addresses, first_name, last_name, image_url } =
         evt.data;
 
+      const email = email_addresses[0]?.email_address.toLowerCase();
+
       await User.create({
         clerkId: id,
-        email: email_addresses[0]?.email_address,
+        email,
         name: `${first_name || ""} ${last_name || ""}`.trim(),
         imageUrl: image_url,
+        role:
+          email === process.env.ADMIN_EMAIL?.toLowerCase()
+            ? "admin"
+            : "student",
       });
 
       break;
