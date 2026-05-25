@@ -147,7 +147,7 @@ const Navbar = () => {
 
             <Show when={"signed-in"}>
               {isEducator && (
-                <Link href="/educator-dashboard" className={navLinkClass}>
+                <Link href="/educator" className={navLinkClass}>
                   Dashboard
                 </Link>
               )}

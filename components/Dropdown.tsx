@@ -70,7 +70,7 @@ export function Dropdown() {
           <DropdownMenuGroup>
             {isEducator && (
               <DropdownMenuItem asChild>
-                <Link href="/educator-dashboard">Dashboard</Link>
+                <Link href="/educator">Dashboard</Link>
               </DropdownMenuItem>
             )}
 

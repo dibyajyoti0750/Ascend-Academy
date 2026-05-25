@@ -60,7 +60,7 @@ export default function MyCourses({ courses }: Props) {
           </div>
 
           <Button asChild>
-            <Link href="/educator-dashboard/add-course">Add Course</Link>
+            <Link href="/educator/add-course">Add Course</Link>
           </Button>
         </div>
 

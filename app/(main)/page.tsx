@@ -4,8 +4,9 @@ import CTA from "@/components/student/CTA";
 import Footer from "@/components/student/Footer";
 import Hero from "@/components/student/Hero";
 import TestimonialsSection from "@/components/student/TestimonialsSection";
+import ToastHandler from "@/components/ToastHandler";
 
-export default function Page() {
+export default function page() {
   return (
     <main className="overflow-hidden">
       <Hero />
@@ -14,6 +15,7 @@ export default function Page() {
       <TestimonialsSection />
       <CTA />
       <Footer />
+      <ToastHandler />
     </main>
   );
 }

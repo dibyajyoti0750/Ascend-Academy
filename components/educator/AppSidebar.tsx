@@ -28,22 +28,22 @@ import {
 const mainMenu = [
   {
     title: "Dashboard",
-    url: "/educator-dashboard",
+    url: "/educator",
     icon: LayoutDashboard,
   },
   {
     title: "Add Course",
-    url: "/educator-dashboard/add-course",
+    url: "/educator/add-course",
     icon: PlusSquare,
   },
   {
     title: "My Courses",
-    url: "/educator-dashboard/my-courses",
+    url: "/educator/my-courses",
     icon: Library,
   },
   {
     title: "Students Enrolled",
-    url: "/educator-dashboard/students-enrolled",
+    url: "/educator/students-enrolled",
     icon: Users,
   },
 ];

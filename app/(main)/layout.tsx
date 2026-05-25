@@ -4,6 +4,7 @@ import { Bricolage_Grotesque } from "next/font/google";
 import "@/app/globals.css";
 import Navbar from "@/components/student/Navbar";
 import { ClerkProvider } from "@clerk/nextjs";
+import { Toaster } from "@/components/ui/sonner";
 
 const bricolage = Bricolage_Grotesque({
   subsets: ["latin"],
@@ -26,6 +27,7 @@ export default function RootLayout({
         <ClerkProvider>
           <Navbar />
           <main className="flex-1">{children}</main>
+          <Toaster position="top-right" />
         </ClerkProvider>
       </body>
     </html>
