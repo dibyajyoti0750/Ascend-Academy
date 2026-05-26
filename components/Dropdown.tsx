@@ -17,11 +17,12 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Menu, SquareArrowRightEnter } from "lucide-react";
 import { featuredCourses } from "./student/Navbar";
-import { useStore } from "@/store/educator-store";
+
 import Link from "next/link";
+import { useRole } from "@/hooks/useRole";
 
 export function Dropdown() {
-  const { isEducator } = useStore();
+  const { isEducator } = useRole();
 
   return (
     <DropdownMenu>

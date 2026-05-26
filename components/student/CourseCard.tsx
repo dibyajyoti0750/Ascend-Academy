@@ -13,13 +13,13 @@ import {
 } from "@/components/ui/tooltip";
 import { BookOpen, Clock, Star, Users, Zap } from "lucide-react";
 import Image from "next/image";
-import { useStore } from "@/store/educator-store";
 import Link from "next/link";
 import {
   calcAverageRating,
   calcTotalHours,
   calcTotalLectures,
 } from "@/lib/helpers";
+import { useRole } from "@/hooks/useRole";
 
 interface Props {
   courseData: Course;
@@ -62,7 +62,7 @@ export function StarRating({ rating }: { rating: number }) {
 ───────────────────────────────────────────── */
 
 export default function CourseCard({ courseData }: Props) {
-  const { currency } = useStore();
+  const { currency } = useRole();
 
   const {
     courseTitle,

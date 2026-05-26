@@ -2,8 +2,6 @@
 
 import { BookOpen, Users, TrendingUp, DollarSign } from "lucide-react";
 
-import { useStore } from "@/store/educator-store";
-
 import {
   Card,
   CardContent,
@@ -23,13 +21,14 @@ import {
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { DashboardData } from "@/types/student";
+import { useRole } from "@/hooks/useRole";
 
 interface Props {
   dashboardData: DashboardData;
 }
 
 export default function Dashboard({ dashboardData }: Props) {
-  const { currency } = useStore();
+  const { currency } = useRole();
 
   const stats = [
     {

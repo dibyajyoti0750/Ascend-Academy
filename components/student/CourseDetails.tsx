@@ -9,7 +9,6 @@ import {
   humanizeDuration,
 } from "@/lib/helpers";
 
-import { useStore } from "@/store/educator-store";
 import { Course } from "@/types/course";
 import { useState } from "react";
 import { StarRating } from "./CourseCard";
@@ -32,12 +31,15 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
+import { useRole } from "@/hooks/useRole";
 
 interface Props {
   courseData: Course;
 }
 
 export default function CourseDetails({ courseData }: Props) {
+  const { currency } = useRole();
+
   const [openSections, setOpenSections] = useState<Record<number, boolean>>({
     0: true,
   });
@@ -46,8 +48,6 @@ export default function CourseDetails({ courseData }: Props) {
   } | null>(null);
 
   const [isAlreadyEnrolled] = useState(false);
-
-  const { currency } = useStore();
 
   const toggleSection = (index: number) => {
     setOpenSections((prev) => ({
