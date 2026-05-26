@@ -21,14 +21,14 @@ import {
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { DashboardData } from "@/types/student";
-import { useRole } from "@/hooks/useRole";
+import { useCurrentUser } from "@/hooks/useCurrentUser";
 
 interface Props {
   dashboardData: DashboardData;
 }
 
 export default function Dashboard({ dashboardData }: Props) {
-  const { currency } = useRole();
+  const { currency } = useCurrentUser();
 
   const stats = [
     {

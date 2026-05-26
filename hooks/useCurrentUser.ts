@@ -2,14 +2,13 @@
 
 import { useAuth } from "@clerk/nextjs";
 
-export const useRole = () => {
+export const useCurrentUser = () => {
   const { sessionClaims } = useAuth();
 
   const role = sessionClaims?.metadata?.role;
 
   return {
     role,
-    sessionClaims,
     currency: "₹",
     isEducator: role === "educator" || role === "admin",
   };

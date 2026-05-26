@@ -19,7 +19,7 @@ import {
   calcTotalHours,
   calcTotalLectures,
 } from "@/lib/helpers";
-import { useRole } from "@/hooks/useRole";
+import { useCurrentUser } from "@/hooks/useCurrentUser";
 
 interface Props {
   courseData: Course;
@@ -62,7 +62,7 @@ export function StarRating({ rating }: { rating: number }) {
 ───────────────────────────────────────────── */
 
 export default function CourseCard({ courseData }: Props) {
-  const { currency } = useRole();
+  const { currency } = useCurrentUser();
 
   const {
     courseTitle,

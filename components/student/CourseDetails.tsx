@@ -31,14 +31,14 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
-import { useRole } from "@/hooks/useRole";
+import { useCurrentUser } from "@/hooks/useCurrentUser";
 
 interface Props {
   courseData: Course;
 }
 
 export default function CourseDetails({ courseData }: Props) {
-  const { currency } = useRole();
+  const { currency } = useCurrentUser();
 
   const [openSections, setOpenSections] = useState<Record<number, boolean>>({
     0: true,

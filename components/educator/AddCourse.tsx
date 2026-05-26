@@ -2,13 +2,14 @@
 
 import "quill/dist/quill.snow.css";
 import { ChangeEvent, SubmitEvent, useEffect, useRef, useState } from "react";
-import { Plus, Trash2 } from "lucide-react";
+import { Loader, Plus, Trash2 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { toast } from "sonner";
 
 interface Lecture {
   lectureTitle: string;
@@ -23,6 +24,8 @@ interface Chapter {
 }
 
 export default function AddCourse() {
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
   const [courseData, setCourseData] = useState({
     courseTitle: "",
     coursePrice: "",
@@ -133,6 +136,8 @@ export default function AddCourse() {
     e.preventDefault();
 
     try {
+      setIsSubmitting(true);
+
       const formattedCourseContent = chapters.map((chapter, chapterIndex) => ({
         chapterOrder: chapterIndex + 1,
         chapterTitle: chapter.chapterTitle,
@@ -172,8 +177,50 @@ export default function AddCourse() {
       const data = await response.json();
 
       console.log(data);
+
+      // reset
+      setCourseData({
+        courseTitle: "",
+        coursePrice: "",
+        discount: "",
+        courseLevel: "beginner",
+        thumbnail: null,
+        courseDescription: "",
+        courseRequirements: "",
+      });
+
+      setChapters([
+        {
+          chapterTitle: "",
+          lectures: [
+            {
+              lectureTitle: "",
+              lectureDuration: "",
+              lectureUrl: "",
+              isPreviewFree: false,
+            },
+          ],
+        },
+      ]);
+
+      if (descriptionQuillRef.current) {
+        descriptionQuillRef.current.root.innerHTML = "";
+      }
+
+      if (requirementsQuillRef.current) {
+        requirementsQuillRef.current.root.innerHTML = "";
+      }
+
+      toast.success("Course created successfully");
     } catch (error) {
-      console.log(error);
+      const errMsg =
+        error instanceof Error ? error.message : "Failed to create course";
+
+      console.log(errMsg);
+
+      toast.error(errMsg);
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -494,8 +541,17 @@ export default function AddCourse() {
           </div>
 
           {/* SUBMIT */}
-          <Button type="submit" size="lg" className="w-full">
-            Create Course
+          <Button
+            type="submit"
+            size="lg"
+            disabled={isSubmitting}
+            className="w-full cursor-pointer disabled:cursor-not-allowed disabled:opacity-60"
+          >
+            {isSubmitting ? (
+              <Loader className="animate-spin" />
+            ) : (
+              "Create Course"
+            )}
           </Button>
         </form>
       </div>

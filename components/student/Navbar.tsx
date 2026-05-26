@@ -14,7 +14,7 @@ import {
 } from "@/components/ui/navigation-menu";
 import SearchBar from "@/components/student/SearchBar";
 import { Dropdown } from "@/components/Dropdown";
-import { useRole } from "@/hooks/useRole";
+import { useCurrentUser } from "@/hooks/useCurrentUser";
 
 export const featuredCourses = [
   {
@@ -45,7 +45,7 @@ const navLinkClass =
 
 const Navbar = () => {
   // Replace this later with real auth logic
-  const { isEducator } = useRole();
+  const { isEducator } = useCurrentUser();
 
   return (
     <header className="border-b">

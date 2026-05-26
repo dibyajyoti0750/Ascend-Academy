@@ -19,10 +19,10 @@ import { Menu, SquareArrowRightEnter } from "lucide-react";
 import { featuredCourses } from "./student/Navbar";
 
 import Link from "next/link";
-import { useRole } from "@/hooks/useRole";
+import { useCurrentUser } from "@/hooks/useCurrentUser";
 
 export function Dropdown() {
-  const { isEducator } = useRole();
+  const { isEducator } = useCurrentUser();
 
   return (
     <DropdownMenu>

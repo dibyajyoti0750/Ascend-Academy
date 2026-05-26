@@ -10,6 +10,7 @@ import {
   SidebarTrigger,
 } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/educator/AppSidebar";
+import { Toaster } from "@/components/ui/sonner";
 
 const bricolage = Bricolage_Grotesque({
   subsets: ["latin"],
@@ -41,6 +42,8 @@ export default function RootLayout({
 
               {/* Page Content */}
               <div>{children}</div>
+
+              <Toaster position="top-right" />
 
               <Footer />
             </SidebarInset>
