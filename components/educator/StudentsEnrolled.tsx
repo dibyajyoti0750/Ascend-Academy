@@ -20,14 +20,14 @@ import { Badge } from "@/components/ui/badge";
 import { CalendarDays, GraduationCap, Users } from "lucide-react";
 
 interface Props {
-  enrolledStudents: EnrolledStudentData[];
+  enrolledStudentsData: EnrolledStudentData[];
 }
 
-export default function StudentsEnrolled({ enrolledStudents }: Props) {
-  const totalStudents = enrolledStudents.length;
+export default function StudentsEnrolled({ enrolledStudentsData }: Props) {
+  const totalStudents = enrolledStudentsData.length;
 
   const uniqueCourses = new Set(
-    enrolledStudents.map((item) => item.courseTitle),
+    enrolledStudentsData.map((item) => item.courseTitle),
   ).size;
 
   return (
@@ -94,7 +94,7 @@ export default function StudentsEnrolled({ enrolledStudents }: Props) {
                 </TableHeader>
 
                 <TableBody>
-                  {enrolledStudents.map((item) => (
+                  {enrolledStudentsData.map((item) => (
                     <TableRow key={`${item.student._id}-${item.courseTitle}`}>
                       {/* Student */}
                       <TableCell>
