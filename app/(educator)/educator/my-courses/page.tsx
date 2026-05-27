@@ -12,16 +12,16 @@ export default async function Page() {
     return <div>Unauthorized</div>;
   }
 
-  const user = await User.findOne({ clerkId: userId });
+  const educator = await User.findOne({ clerkId: userId });
 
-  if (!user) {
+  if (!educator) {
     return <div>User not found</div>;
   }
 
   const educatorCourses = JSON.parse(
     JSON.stringify(
       await Course.find({
-        educator: user._id,
+        educator: educator._id,
       }),
     ),
   );
