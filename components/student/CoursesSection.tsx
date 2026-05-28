@@ -8,11 +8,11 @@ import Link from "next/link";
 import { Course } from "@/types/course";
 
 interface Props {
-  courses: Course[];
+  allCourses: Course[];
 }
 
-export default function CoursesSection({ courses }: Props) {
-  if (courses.length === 0) {
+export default function CoursesSection({ allCourses }: Props) {
+  if (allCourses.length === 0) {
     return <p className="text-center">No courses found.</p>;
   }
 
@@ -38,7 +38,7 @@ export default function CoursesSection({ courses }: Props) {
                 {/* Underline accent */}
                 <span
                   aria-hidden
-                  className="absolute -bottom-1 left-0 h-[3px] w-full rounded-full bg-linear-to-r from-indigo-500 to-violet-500"
+                  className="absolute -bottom-1 left-0 h-0.75 w-full rounded-full bg-linear-to-r from-indigo-500 to-violet-500"
                 />
               </span>
             </h2>
@@ -64,7 +64,7 @@ export default function CoursesSection({ courses }: Props) {
 
         {/* ── Grid ── */}
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
-          {courses.slice(0, 4).map((course, index) => (
+          {allCourses.slice(0, 4).map((course, index) => (
             <div
               key={index}
               className="animate-fade-up opacity-0"

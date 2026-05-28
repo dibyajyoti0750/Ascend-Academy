@@ -7,9 +7,10 @@ import User from "@/models/User";
 import { EnrolledStudentData, Student } from "@/types/student";
 
 export default async function page() {
+  const { userId } = await auth();
+
   await connectDB();
 
-  const { userId } = await auth();
   const educator = await User.findOne({ clerkId: userId });
 
   const courses = await Course.find({

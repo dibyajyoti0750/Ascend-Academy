@@ -1,8 +1,20 @@
-import { dummyCourses } from "@/assets/assets";
 import MyEnrollments from "@/components/student/MyEnrollments";
+import connectDB from "@/lib/db";
+import User from "@/models/User";
+import { auth } from "@clerk/nextjs/server";
 
-export default function page() {
-  const enrolledCourses = dummyCourses.slice(0, 3);
+export default async function page() {
+  const { userId } = await auth();
 
-  return <MyEnrollments enrolledCourses={enrolledCourses} />;
+  await connectDB();
+
+  const userData = await User.findOne({ clerkId: userId })
+    .populate("enrolledCourses")
+    .lean();
+
+  if (!userData) {
+    return <div>No user found</div>;
+  }
+
+  return <MyEnrollments enrolledCourses={userData.enrolledCourses} />;
 }
