@@ -2,6 +2,7 @@ import connectDB from "@/lib/db";
 import CourseProgress from "@/models/CourseProgress";
 import User from "@/models/User";
 import { auth } from "@clerk/nextjs/server";
+import { Types } from "mongoose";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(req: NextRequest) {
@@ -39,7 +40,7 @@ export async function POST(req: NextRequest) {
 
     if (
       progressData?.lectureCompleted.some(
-        (id: string) => id.toString() === lectureId,
+        (id: Types.ObjectId) => id.toString() === lectureId,
       )
     ) {
       return NextResponse.json({

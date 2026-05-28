@@ -2,6 +2,7 @@ import connectDB from "@/lib/db";
 import Course from "@/models/Course";
 import User from "@/models/User";
 import { auth } from "@clerk/nextjs/server";
+import { Types } from "mongoose";
 import { NextRequest, NextResponse } from "next/server";
 
 interface Rating {
@@ -33,7 +34,9 @@ export async function POST(req: NextRequest) {
 
     if (
       !user ||
-      !user.enrolledCourses.some((id: string) => id.toString() === courseId)
+      !user.enrolledCourses.some(
+        (id: Types.ObjectId) => id.toString() === courseId,
+      )
     ) {
       return NextResponse.json(
         {
