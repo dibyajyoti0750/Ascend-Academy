@@ -6,7 +6,7 @@ import Purchase from "@/models/Purchase";
 import User from "@/models/User";
 import { EnrolledStudentData } from "@/types/student";
 
-export default async function Page() {
+export default async function page() {
   await connectDB();
 
   const { userId } = await auth();

@@ -4,7 +4,7 @@ import Course from "@/models/Course";
 import User from "@/models/User";
 import { auth } from "@clerk/nextjs/server";
 
-export default async function Page() {
+export default async function page() {
   await connectDB();
   const { userId } = await auth();
 

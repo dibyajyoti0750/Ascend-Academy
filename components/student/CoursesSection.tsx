@@ -1,13 +1,21 @@
 "use client";
 
-import { dummyCourses } from "@/assets/assets";
 import CourseCard from "./CourseCard";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { ArrowRight, Sparkles } from "lucide-react";
 import Link from "next/link";
+import { Course } from "@/types/course";
 
-export default function CoursesSection() {
+interface Props {
+  courses: Course[];
+}
+
+export default function CoursesSection({ courses }: Props) {
+  if (courses.length === 0) {
+    return <p className="text-center">No courses found.</p>;
+  }
+
   return (
     <section className="relative w-full overflow-hidden py-20 md:py-28">
       <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -56,7 +64,7 @@ export default function CoursesSection() {
 
         {/* ── Grid ── */}
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
-          {dummyCourses.slice(0, 4).map((course, index) => (
+          {courses.slice(0, 4).map((course, index) => (
             <div
               key={index}
               className="animate-fade-up opacity-0"

@@ -1,20 +1,27 @@
-import { dummyCourses } from "@/assets/assets";
 import CourseCard from "@/components/student/CourseCard";
+import connectDB from "@/lib/db";
+import Course from "@/models/Course";
 
 interface Props {
   searchParams: Promise<{ query?: string }>;
 }
 
-export default async function Page({ searchParams }: Props) {
+export default async function page({ searchParams }: Props) {
+  await connectDB();
   const { query } = await searchParams;
+
+  const courses = await Course.find({ isPublished: true })
+    .select(["-courseContent", "-enrolledStudents"])
+    .populate({ path: "educator" })
+    .lean();
 
   const trimmedQuery = query?.trim() || "";
 
   const filteredCourses = trimmedQuery
-    ? dummyCourses.filter((course) =>
+    ? courses.filter((course) =>
         course.courseTitle.toLowerCase().includes(trimmedQuery.toLowerCase()),
       )
-    : dummyCourses;
+    : courses;
 
   return (
     <main className="min-h-screen bg-zinc-50">

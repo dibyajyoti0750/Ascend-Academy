@@ -1,17 +1,34 @@
-import { dummyCourses } from "@/assets/assets";
 import CourseDetails from "@/components/student/CourseDetails";
+import connectDB from "@/lib/db";
+import Course from "@/models/Course";
+import type { Course as CourseType } from "@/types/course";
 
 interface Props {
   params: Promise<{ courseId: string }>;
 }
 
-export default async function page({ params }: Props) {
+export default async function Page({ params }: Props) {
+  await connectDB();
+
   const { courseId } = await params;
-  const courseData = dummyCourses.find(({ _id }) => _id === courseId) || null;
+
+  const courseData: CourseType | null = await Course.findById(
+    courseId,
+  ).populate({
+    path: "educator",
+  });
 
   if (!courseData) {
     return <div>Course not found</div>;
   }
+
+  courseData.courseContent.forEach((chapter) => {
+    chapter.chapterContent.forEach((lecture) => {
+      if (!lecture.isPreviewFree) {
+        lecture.lectureUrl = "";
+      }
+    });
+  });
 
   return <CourseDetails courseData={courseData} />;
 }
