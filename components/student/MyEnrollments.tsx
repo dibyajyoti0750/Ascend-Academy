@@ -13,6 +13,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 import { calcTotalHours } from "@/lib/helpers";
 import { Check } from "lucide-react";
+import { toast } from "sonner";
 
 interface Props {
   enrolledCourses: Course[];
@@ -24,6 +25,31 @@ export default function MyEnrollments({ enrolledCourses }: Props) {
     { lectureCompleted: 2, totalLectures: 6 },
     { lectureCompleted: 4, totalLectures: 10 },
   ]);
+
+  const handleLectureComplete = async (courseId: string, lectureId: string) => {
+    try {
+      const response = await fetch("/api/course/progress", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          courseId,
+          lectureId,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        toast.success(data.message);
+      } else {
+        toast.error(data.message);
+      }
+    } catch {
+      toast.error("Something went wrong");
+    }
+  };
 
   return (
     <section className="min-h-screen bg-muted/30">

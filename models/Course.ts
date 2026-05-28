@@ -1,60 +1,54 @@
 import { model, models, Schema } from "mongoose";
 
-const lectureSchema = new Schema(
-  {
-    lectureTitle: {
-      type: String,
-      required: true,
-      trim: true,
-    },
-
-    lectureDuration: {
-      type: Number,
-      required: true,
-      min: 0,
-    },
-
-    lectureUrl: {
-      type: String,
-      required: true,
-      trim: true,
-    },
-
-    isPreviewFree: {
-      type: Boolean,
-      default: false,
-    },
-
-    lectureOrder: {
-      type: Number,
-      required: true,
-      min: 1,
-    },
+const lectureSchema = new Schema({
+  lectureTitle: {
+    type: String,
+    required: true,
+    trim: true,
   },
-  { _id: false },
-);
 
-const chapterSchema = new Schema(
-  {
-    chapterOrder: {
-      type: Number,
-      required: true,
-      min: 1,
-    },
-
-    chapterTitle: {
-      type: String,
-      required: true,
-      trim: true,
-    },
-
-    chapterContent: {
-      type: [lectureSchema],
-      default: [],
-    },
+  lectureDuration: {
+    type: Number,
+    required: true,
+    min: 0,
   },
-  { _id: false },
-);
+
+  lectureUrl: {
+    type: String,
+    required: true,
+    trim: true,
+  },
+
+  isPreviewFree: {
+    type: Boolean,
+    default: false,
+  },
+
+  lectureOrder: {
+    type: Number,
+    required: true,
+    min: 1,
+  },
+});
+
+const chapterSchema = new Schema({
+  chapterOrder: {
+    type: Number,
+    required: true,
+    min: 1,
+  },
+
+  chapterTitle: {
+    type: String,
+    required: true,
+    trim: true,
+  },
+
+  chapterContent: {
+    type: [lectureSchema],
+    default: [],
+  },
+});
 
 const courseSchema = new Schema(
   {
