@@ -4,7 +4,6 @@ import { useAuth } from "@clerk/nextjs";
 
 export const useCurrentUser = () => {
   const { sessionClaims } = useAuth();
-
   const role = sessionClaims?.metadata?.role;
 
   return {
