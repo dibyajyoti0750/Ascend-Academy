@@ -44,7 +44,6 @@ const navLinkClass =
   "px-4 py-2 text-sm font-medium rounded-md p-3 transition-colors hover:bg-muted";
 
 const Navbar = () => {
-  // Replace this later with real auth logic
   const { isEducator } = useCurrentUser();
 
   return (
@@ -130,7 +129,7 @@ const Navbar = () => {
           </div>
 
           {/* Desktop Auth */}
-          <div className="hidden items-center gap-2 lg:flex">
+          <div className="hidden items-center lg:flex">
             <Show when={"signed-out"}>
               <SignInButton>
                 <span className="cursor-pointer text-sm font-medium">
@@ -156,7 +155,9 @@ const Navbar = () => {
                 My Enrollments
               </Link>
 
-              <UserButton />
+              <div className="ml-3">
+                <UserButton />
+              </div>
             </Show>
           </div>
         </div>
