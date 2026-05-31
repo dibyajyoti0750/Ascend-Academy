@@ -60,7 +60,7 @@ export async function POST(req: NextRequest) {
     // Upload to cloudinary
     const uploadResponse = await new Promise<any>((resolve, reject) => {
       cloudinary.uploader
-        .upload_stream({}, (error, result) => {
+        .upload_stream({ folder: "Ascend-Academy" }, (error, result) => {
           if (error) reject(error);
           else resolve(result);
         })
@@ -81,10 +81,14 @@ export async function POST(req: NextRequest) {
       message: "Course created successfully",
     });
   } catch (error: any) {
+    console.error("COURSE CREATE ERROR:");
+    console.error(error);
+
     return NextResponse.json(
       {
         success: false,
         message: error.message,
+        stack: error.stack,
       },
       { status: 500 },
     );

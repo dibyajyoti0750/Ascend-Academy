@@ -15,14 +15,19 @@ export default async function page() {
 
   await connectDB();
 
-  const allCourses = await Course.find({ isPublished: true })
-    .select(["-courseContent", "-enrolledStudents"])
-    .populate({ path: "educator" })
-    .lean();
+  const allCourses = JSON.parse(
+    JSON.stringify(
+      await Course.find({ isPublished: true })
+        .select(["-courseContent", "-enrolledStudents"])
+        .populate({ path: "educator" })
+
+        .lean(),
+    ),
+  );
 
   const userData = await User.findOne({ clerkId: userId }).lean();
 
-  console.log(userData);
+  // console.log(userData);
 
   return (
     <main className="overflow-hidden">

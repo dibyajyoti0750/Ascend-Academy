@@ -12,11 +12,15 @@ export default async function Page({ params }: Props) {
 
   const { courseId } = await params;
 
-  const courseData: CourseType | null = await Course.findById(
-    courseId,
-  ).populate({
-    path: "educator",
-  });
+  const courseData: CourseType | null = JSON.parse(
+    JSON.stringify(
+      await Course.findById(courseId)
+        .populate({
+          path: "educator",
+        })
+        .lean(),
+    ),
+  );
 
   if (!courseData) {
     return <div>Course not found</div>;

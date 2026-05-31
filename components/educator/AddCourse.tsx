@@ -483,9 +483,10 @@ export default function AddCourse() {
                           </div>
 
                           <div className="space-y-2">
-                            <Label>Duration</Label>
+                            <Label>Duration (mins)</Label>
 
                             <Input
+                              type="number"
                               value={lecture.lectureDuration}
                               onChange={(e) =>
                                 handleLectureChange(
@@ -495,7 +496,7 @@ export default function AddCourse() {
                                   e.target.value,
                                 )
                               }
-                              placeholder="10 mins"
+                              placeholder="10"
                             />
                           </div>
 
