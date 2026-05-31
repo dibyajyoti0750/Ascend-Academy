@@ -67,7 +67,6 @@ export default function CourseCard({ courseData }: Props) {
   const {
     _id,
     courseTitle,
-    slug,
     courseDescription,
     coursePrice,
     discount,
