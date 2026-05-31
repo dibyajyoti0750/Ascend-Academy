@@ -1,6 +1,7 @@
 import CourseCard from "@/components/student/CourseCard";
 import connectDB from "@/lib/db";
 import Course from "@/models/Course";
+import { Course as CourseType } from "@/types/course";
 
 interface Props {
   searchParams: Promise<{ query?: string }>;
@@ -10,10 +11,13 @@ export default async function page({ searchParams }: Props) {
   await connectDB();
   const { query } = await searchParams;
 
-  const courses = await Course.find({ isPublished: true })
-    .select(["-courseContent", "-enrolledStudents"])
-    .populate({ path: "educator" })
-    .lean();
+  const courses: CourseType[] = JSON.parse(
+    JSON.stringify(
+      await Course.find({ isPublished: true })
+        .populate({ path: "educator" })
+        .lean(),
+    ),
+  );
 
   const trimmedQuery = query?.trim() || "";
 

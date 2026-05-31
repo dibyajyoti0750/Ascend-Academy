@@ -9,18 +9,17 @@ import ToastHandler from "@/components/ToastHandler";
 import connectDB from "@/lib/db";
 import Course from "@/models/Course";
 import User from "@/models/User";
+import { Course as CourseType } from "@/types/course";
 
 export default async function page() {
   const { userId } = await auth();
 
   await connectDB();
 
-  const allCourses = JSON.parse(
+  const allCourses: CourseType[] = JSON.parse(
     JSON.stringify(
       await Course.find({ isPublished: true })
-        .select(["-courseContent", "-enrolledStudents"])
         .populate({ path: "educator" })
-
         .lean(),
     ),
   );

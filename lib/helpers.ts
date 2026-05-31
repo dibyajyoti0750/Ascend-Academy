@@ -8,12 +8,14 @@ export function calcAverageRating(ratings: Course["courseRatings"]): number {
 export function calcTotalHours(content: Course["courseContent"]): number {
   const totalMinutes = content?.reduce((acc, chapter) => {
     const chapterMinutes = chapter.chapterContent?.reduce(
-      (s, l) => s + (l.lectureDuration ?? 0),
+      (sum, lecture) => sum + (lecture.lectureDuration ?? 0),
       0,
     );
+
     return acc + (chapterMinutes ?? 0);
   }, 0);
-  return Math.round((totalMinutes ?? 0) / 60);
+
+  return (totalMinutes ?? 0) / 60;
 }
 
 export function calcTotalLectures(content: Course["courseContent"]): number {

@@ -1,3 +1,5 @@
+import { Educator } from "./educator";
+
 export interface Lecture {
   lectureId: string;
   lectureTitle: string;
@@ -22,15 +24,19 @@ interface CourseRating {
 
 export interface Course {
   _id: string;
-  isPublished: boolean;
   courseTitle: string;
+  slug: string;
   courseDescription: string;
+  courseRequirements: string;
+  courseThumbnail: string;
   coursePrice: number;
   discount: number;
-  courseThumbnail: string;
+  isPublished: boolean;
+  courseLevel: string;
+  courseContent: Chapter[];
+  educator: Educator;
   enrolledStudents: string[];
   courseRatings: CourseRating[];
-  courseContent: Chapter[];
   createdAt: string;
   updatedAt: string;
   __v: number;

@@ -3,7 +3,7 @@
 import { Course } from "@/types/course";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Separator } from "@/components/ui/separator";
 import {
   Tooltip,
@@ -65,7 +65,9 @@ export default function CourseCard({ courseData }: Props) {
   const { currency } = useCurrentUser();
 
   const {
+    _id,
     courseTitle,
+    slug,
     courseDescription,
     coursePrice,
     discount,
@@ -73,10 +75,17 @@ export default function CourseCard({ courseData }: Props) {
     enrolledStudents,
     courseRatings,
     courseContent,
+    educator,
   } = courseData;
 
   const avgRating = calcAverageRating(courseRatings);
   const totalHours = calcTotalHours(courseContent);
+
+  const durationText =
+    totalHours < 1
+      ? `${Math.round(totalHours * 60)} min`
+      : `${totalHours.toFixed(1)}h`;
+
   const totalLectures = calcTotalLectures(courseContent);
   const discountedPrice =
     discount > 0 ? coursePrice - (coursePrice * discount) / 100 : null;
@@ -84,7 +93,7 @@ export default function CourseCard({ courseData }: Props) {
 
   return (
     <TooltipProvider>
-      <Link href={`/course/${courseData._id}`} className="block">
+      <Link href={`/course/${_id}`} className="block">
         <Card className="group relative flex w-full max-w-sm flex-col overflow-hidden rounded-2xl border border-border/60 bg-card p-0 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-black/10 dark:hover:shadow-black/40">
           {/* ── Thumbnail ── */}
           <div className="relative aspect-video overflow-hidden bg-muted">
@@ -130,8 +139,18 @@ export default function CourseCard({ courseData }: Props) {
 
             {/* Description */}
             <p className="line-clamp-2 text-[13px] leading-relaxed text-muted-foreground">
-              {courseDescription.replace(/<[^>]*>/g, "")}
+              {courseDescription?.replace(/<[^>]*>/g, "") || ""}
             </p>
+
+            {/* Educator */}
+            <div className="flex items-center gap-2 text-xs text-muted-foreground">
+              <Avatar className="h-5 w-5">
+                <AvatarImage src={educator.imageUrl} />
+                <AvatarFallback>{educator.name.charAt(0)}</AvatarFallback>
+              </Avatar>
+
+              <span className="truncate">By {educator.name}</span>
+            </div>
 
             {/* Stats row */}
             <div className="flex items-center gap-3 text-[12px] text-muted-foreground">
@@ -140,7 +159,8 @@ export default function CourseCard({ courseData }: Props) {
                   <TooltipTrigger asChild>
                     <span className="flex cursor-default items-center gap-1">
                       <BookOpen className="h-3.5 w-3.5 shrink-0" />
-                      {totalLectures} lectures
+                      {totalLectures}{" "}
+                      {totalLectures === 1 ? "lecture" : "lectures"}
                     </span>
                   </TooltipTrigger>
                   <TooltipContent side="bottom">
@@ -149,20 +169,18 @@ export default function CourseCard({ courseData }: Props) {
                 </Tooltip>
               )}
 
-              {totalLectures > 0 && totalHours > 0 && (
-                <span className="text-border">·</span>
-              )}
+              {totalLectures > 0 && totalHours > 0 && <span>•</span>}
 
               {totalHours > 0 && (
                 <Tooltip>
                   <TooltipTrigger asChild>
                     <span className="flex cursor-default items-center gap-1">
                       <Clock className="h-3.5 w-3.5 shrink-0" />
-                      {totalHours}h content
+                      {durationText}
                     </span>
                   </TooltipTrigger>
                   <TooltipContent side="bottom">
-                    <p>Total video hours</p>
+                    <p>Total video duration</p>
                   </TooltipContent>
                 </Tooltip>
               )}
