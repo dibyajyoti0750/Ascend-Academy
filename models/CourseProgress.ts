@@ -19,7 +19,7 @@ const courseProgressSchema = new Schema(
       default: false,
     },
 
-    lectureCompleted: [],
+    lectureCompleted: [{ type: Schema.Types.ObjectId, required: true }],
   },
   { minimize: false },
 );

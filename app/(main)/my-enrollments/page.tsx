@@ -1,5 +1,6 @@
 import MyEnrollments from "@/components/student/MyEnrollments";
 import connectDB from "@/lib/db";
+import CourseProgress from "@/models/CourseProgress";
 import User from "@/models/User";
 import { auth } from "@clerk/nextjs/server";
 
@@ -12,9 +13,18 @@ export default async function page() {
     .populate("enrolledCourses")
     .lean();
 
+  const progressDocs = await CourseProgress.find({
+    userId: userData._id,
+  }).lean();
+
   if (!userData) {
     return <div>No user found</div>;
   }
 
-  return <MyEnrollments enrolledCourses={userData.enrolledCourses} />;
+  return (
+    <MyEnrollments
+      enrolledCourses={userData.enrolledCourses}
+      progressDocs={progressDocs}
+    />
+  );
 }

@@ -40,6 +40,13 @@ interface Props {
 export default function CourseDetails({ courseData }: Props) {
   const { currency } = useCurrentUser();
 
+  const totalHours = calcTotalHours(courseData.courseContent);
+
+  const durationText =
+    totalHours < 1
+      ? `${Math.round(totalHours * 60)} min`
+      : `${totalHours.toFixed(1)}h`;
+
   const [openSections, setOpenSections] = useState<Record<number, boolean>>({
     0: true,
   });
@@ -138,7 +145,7 @@ export default function CourseDetails({ courseData }: Props) {
                   <p className="text-slate-500 mt-1">
                     {courseData.courseContent.length} sections •{" "}
                     {calcTotalLectures(courseData.courseContent)} lectures •{" "}
-                    {calcTotalHours(courseData.courseContent)} total hours
+                    {durationText}
                   </p>
                 </div>
               </div>
@@ -326,7 +333,7 @@ export default function CourseDetails({ courseData }: Props) {
                   <div className="rounded-xl border bg-slate-50 p-3 text-center">
                     <Clock className="h-5 w-5 mx-auto text-slate-700" />
                     <p className="mt-2 text-sm font-semibold text-slate-900">
-                      {calcTotalHours(courseData.courseContent)}h
+                      {durationText}
                     </p>
                   </div>
 
