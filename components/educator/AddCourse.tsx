@@ -10,6 +10,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
+import Quill from "quill";
 
 interface Lecture {
   lectureTitle: string;
@@ -55,8 +56,8 @@ export default function AddCourse() {
   const descriptionEditorRef = useRef<HTMLDivElement>(null);
   const requirementsEditorRef = useRef<HTMLDivElement>(null);
 
-  const descriptionQuillRef = useRef<any>(null);
-  const requirementsQuillRef = useRef<any>(null);
+  const descriptionQuillRef = useRef<Quill | null>(null);
+  const requirementsQuillRef = useRef<Quill | null>(null);
 
   // ---------------- COURSE INPUT ----------------
 
@@ -243,10 +244,11 @@ export default function AddCourse() {
           placeholder: "Write your course description...",
         });
 
-        descriptionQuillRef.current.on("text-change", () => {
+        descriptionQuillRef.current?.on("text-change", () => {
           setCourseData((prev) => ({
             ...prev,
-            courseDescription: descriptionQuillRef.current.root.innerHTML,
+            courseDescription:
+              descriptionQuillRef.current?.root.innerHTML ?? "",
           }));
         });
       }
@@ -269,10 +271,11 @@ export default function AddCourse() {
           },
         );
 
-        requirementsQuillRef.current.on("text-change", () => {
+        requirementsQuillRef.current?.on("text-change", () => {
           setCourseData((prev) => ({
             ...prev,
-            courseRequirements: requirementsQuillRef.current.root.innerHTML,
+            courseRequirements:
+              requirementsQuillRef.current?.root.innerHTML ?? "",
           }));
         });
       }

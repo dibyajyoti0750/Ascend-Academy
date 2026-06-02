@@ -5,6 +5,7 @@ import CourseProgress from "@/models/CourseProgress";
 import User from "@/models/User";
 import { Course as CourseType } from "@/types/course";
 import { auth } from "@clerk/nextjs/server";
+import { redirect } from "next/navigation";
 
 interface Props {
   params: Promise<{ courseId: string }>;
@@ -14,9 +15,20 @@ export default async function page({ params }: Props) {
   const { courseId } = await params;
   const { userId } = await auth();
 
+  if (!userId) {
+    redirect("/?error=signin-required");
+  }
+
   await connectDB();
 
-  const user = await User.findOne({ clerkId: userId });
+  const user = await User.findOne({
+    clerkId: userId,
+    enrolledCourses: courseId,
+  });
+
+  if (!user) {
+    redirect("/");
+  }
 
   const courseData: CourseType = JSON.parse(
     JSON.stringify(await Course.findById(courseId).lean()),
@@ -27,7 +39,10 @@ export default async function page({ params }: Props) {
       (r) => r.userId.toString() === user._id.toString(),
     )?.rating ?? 0;
 
-  const progressDoc = await CourseProgress.findOne({ courseId });
+  const progressDoc = await CourseProgress.findOne({
+    courseId,
+    userId: user._id,
+  });
 
   return (
     <Player

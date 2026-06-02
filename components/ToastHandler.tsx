@@ -12,6 +12,8 @@ export default function ToastHandler() {
 
     if (error === "unauthorized") {
       toast.error("You are not authorized");
+    } else if (error === "signin-required") {
+      toast.error("You must be signed in to view this page");
     }
   }, [searchParams]);
 
