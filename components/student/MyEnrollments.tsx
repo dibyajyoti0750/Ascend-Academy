@@ -12,7 +12,6 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 import { calcTotalHours, calcTotalLectures } from "@/lib/helpers";
 import { Check } from "lucide-react";
-import { toast } from "sonner";
 import { CourseProgress } from "@/types/courseProgress";
 
 interface Props {
@@ -49,31 +48,6 @@ export default function MyEnrollments({
       isCompleted,
     };
   });
-
-  const handleLectureComplete = async (courseId: string, lectureId: string) => {
-    try {
-      const response = await fetch("/api/course/progress", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          courseId,
-          lectureId,
-        }),
-      });
-
-      const data = await response.json();
-
-      if (data.success) {
-        toast.success(data.message);
-      } else {
-        toast.error(data.message);
-      }
-    } catch {
-      toast.error("Something went wrong");
-    }
-  };
 
   return (
     <section className="min-h-screen bg-muted/30">

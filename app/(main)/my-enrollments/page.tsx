@@ -9,13 +9,21 @@ export default async function page() {
 
   await connectDB();
 
-  const userData = await User.findOne({ clerkId: userId })
-    .populate("enrolledCourses")
-    .lean();
+  const userData = JSON.parse(
+    JSON.stringify(
+      await User.findOne({ clerkId: userId })
+        .populate("enrolledCourses")
+        .lean(),
+    ),
+  );
 
-  const progressDocs = await CourseProgress.find({
-    userId: userData._id,
-  }).lean();
+  const progressDocs = JSON.parse(
+    JSON.stringify(
+      await CourseProgress.find({
+        userId: userData._id,
+      }).lean(),
+    ),
+  );
 
   if (!userData) {
     return <div>No user found</div>;

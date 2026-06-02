@@ -50,6 +50,27 @@ const chapterSchema = new Schema({
   },
 });
 
+const ratingSchema = new Schema(
+  {
+    userId: {
+      type: Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
+    },
+
+    rating: {
+      type: Number,
+      required: true,
+      min: 1,
+      max: 5,
+    },
+  },
+  {
+    _id: false,
+    timestamps: true,
+  },
+);
+
 const courseSchema = new Schema(
   {
     courseTitle: {
@@ -119,27 +140,7 @@ const courseSchema = new Schema(
       required: true,
     },
 
-    courseRatings: {
-      type: [
-        {
-          _id: false,
-
-          userId: {
-            type: Schema.Types.ObjectId,
-            ref: "User",
-            required: true,
-          },
-
-          rating: {
-            type: Number,
-            required: true,
-            min: 1,
-            max: 5,
-          },
-        },
-      ],
-      default: [],
-    },
+    courseRatings: { type: [ratingSchema], default: [] },
 
     enrolledStudents: {
       type: [

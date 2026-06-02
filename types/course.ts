@@ -1,7 +1,7 @@
 import { Educator } from "./educator";
 
 export interface Lecture {
-  lectureId: string;
+  _id: string;
   lectureTitle: string;
   lectureDuration: number;
   lectureUrl: string;
@@ -16,10 +16,9 @@ export interface Chapter {
   chapterContent: Lecture[];
 }
 
-interface CourseRating {
+export interface CourseRating {
   userId: string;
   rating: number;
-  _id: string;
 }
 
 export interface Course {

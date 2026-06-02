@@ -1,6 +1,5 @@
 "use client";
 
-import { dummyCourses } from "@/assets/assets";
 import {
   calcAverageRating,
   calcChapterTime,
@@ -11,6 +10,7 @@ import {
 import {
   BookOpen,
   ChevronDown,
+  CircleCheck,
   Clock,
   PlayCircle,
   Star,
@@ -26,12 +26,18 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
 import Rating from "../Rating";
+import { Course } from "@/types/course";
+import { toast } from "sonner";
+import { CourseProgress } from "@/types/courseProgress";
 
 interface Props {
-  courseId: string;
+  courseData: Course;
+  progressDoc: CourseProgress;
+  userId: string;
+  userRating: number;
 }
 
-export default function Player({ courseId }: Props) {
+export default function Player({ courseData, progressDoc, userId }: Props) {
   const [openSections, setOpenSections] = useState<Record<number, boolean>>({
     0: true,
   });
@@ -43,7 +49,48 @@ export default function Player({ courseId }: Props) {
     title: string;
   } | null>(null);
 
-  const courseData = dummyCourses.find(({ _id }) => _id === courseId);
+  const userRating =
+    courseData.courseRatings.find((r) => r.userId.toString() === userId)
+      ?.rating ?? 0;
+
+  const totalHours = calcTotalHours(courseData.courseContent);
+
+  const durationText =
+    totalHours < 1
+      ? `${Math.round(totalHours * 60)} min`
+      : `${totalHours.toFixed(1)}h`;
+
+  const toggleSection = (index: number) => {
+    setOpenSections((prev) => ({
+      ...prev,
+      [index]: !prev[index],
+    }));
+  };
+
+  const handleLectureComplete = async (courseId: string, lectureId: string) => {
+    try {
+      const response = await fetch("/api/course/progress", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          courseId,
+          lectureId,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        toast.success(data.message);
+      } else {
+        toast.error(data.message);
+      }
+    } catch {
+      toast.error("Something went wrong");
+    }
+  };
 
   if (!courseData) {
     return (
@@ -52,13 +99,6 @@ export default function Player({ courseId }: Props) {
       </section>
     );
   }
-
-  const toggleSection = (index: number) => {
-    setOpenSections((prev) => ({
-      ...prev,
-      [index]: !prev[index],
-    }));
-  };
 
   return (
     <section className="bg-slate-50 min-h-screen">
@@ -108,9 +148,8 @@ export default function Player({ courseId }: Props) {
 
                 <p className="text-slate-600">
                   <span className="font-medium text-slate-900">
-                    {calcTotalHours(courseData.courseContent)}
+                    {durationText}
                   </span>{" "}
-                  total hours
                 </p>
               </div>
             </div>
@@ -126,7 +165,7 @@ export default function Player({ courseId }: Props) {
                   <p className="text-slate-500 mt-1">
                     {courseData.courseContent.length} sections •{" "}
                     {calcTotalLectures(courseData.courseContent)} lectures •{" "}
-                    {calcTotalHours(courseData.courseContent)} total hours
+                    {durationText}
                   </p>
                 </div>
               </div>
@@ -181,7 +220,14 @@ export default function Player({ courseId }: Props) {
                           >
                             <div className="flex items-start gap-3">
                               <div className="mt-0.5">
-                                <TvMinimalPlay className="h-5 w-5 text-slate-500" />
+                                {progressDoc &&
+                                progressDoc.lectureCompleted.includes(
+                                  lecture._id,
+                                ) ? (
+                                  <CircleCheck className="h-5 w-5 text-blue-500" />
+                                ) : (
+                                  <TvMinimalPlay className="h-5 w-5 text-slate-500" />
+                                )}
                               </div>
 
                               <div>
@@ -229,7 +275,11 @@ export default function Player({ courseId }: Props) {
             </div>
 
             {/* RATE COURSE */}
-            <Rating />
+            <Rating
+              courseId={courseData._id}
+              userId={userId}
+              initialRating={userRating}
+            />
           </div>
 
           {/* RIGHT COLUMN */}
@@ -286,7 +336,7 @@ export default function Player({ courseId }: Props) {
                         <Clock className="h-5 w-5 mx-auto text-slate-700" />
 
                         <p className="mt-2 text-sm font-semibold text-slate-900">
-                          {calcTotalHours(courseData.courseContent)}h
+                          {durationText}
                         </p>
 
                         <p className="text-xs text-slate-500 mt-1">Hours</p>
@@ -326,7 +376,7 @@ export default function Player({ courseId }: Props) {
                         <Clock className="h-5 w-5 mx-auto text-slate-700" />
 
                         <p className="mt-2 text-sm font-semibold text-slate-900">
-                          {calcTotalHours(courseData.courseContent)}h
+                          {durationText}
                         </p>
 
                         <p className="text-xs text-slate-500 mt-1">Hours</p>
