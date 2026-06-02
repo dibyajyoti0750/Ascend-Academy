@@ -8,12 +8,9 @@ import TestimonialsSection from "@/components/student/TestimonialsSection";
 import ToastHandler from "@/components/ToastHandler";
 import connectDB from "@/lib/db";
 import Course from "@/models/Course";
-import User from "@/models/User";
 import { Course as CourseType } from "@/types/course";
 
 export default async function page() {
-  const { userId } = await auth();
-
   await connectDB();
 
   const allCourses: CourseType[] = JSON.parse(
@@ -23,10 +20,6 @@ export default async function page() {
         .lean(),
     ),
   );
-
-  const userData = await User.findOne({ clerkId: userId }).lean();
-
-  // console.log(userData);
 
   return (
     <main className="overflow-hidden">
