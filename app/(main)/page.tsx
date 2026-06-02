@@ -1,4 +1,3 @@
-import { auth } from "@clerk/nextjs/server";
 import Companies from "@/components/student/Companies";
 import CoursesSection from "@/components/student/CoursesSection";
 import CTA from "@/components/student/CTA";
