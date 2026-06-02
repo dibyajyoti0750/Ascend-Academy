@@ -5,13 +5,22 @@ import Course from "@/models/Course";
 import Purchase from "@/models/Purchase";
 import User from "@/models/User";
 import { EnrolledStudentData, Student } from "@/types/student";
+import { redirect } from "next/navigation";
 
 export default async function page() {
   const { userId } = await auth();
 
+  if (!userId) {
+    redirect("/?error=signin-required");
+  }
+
   await connectDB();
 
   const educator = await User.findOne({ clerkId: userId });
+
+  if (!educator) {
+    redirect("/");
+  }
 
   const courses = await Course.find({
     educator: educator._id,
