@@ -9,6 +9,7 @@ import {
   Users,
 } from "lucide-react";
 import { Button } from "../ui/button";
+import Link from "next/link";
 
 export default function Hero() {
   return (
@@ -64,13 +65,15 @@ export default function Hero() {
 
           {/* CTA Buttons */}
           <div className="mt-10 flex flex-col items-center gap-4 sm:flex-row lg:items-start">
-            <Button
-              size="lg"
-              className="group h-12 px-8 text-base shadow-lg shadow-primary/20 cursor-pointer"
-            >
-              Start Learning
-              <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
-            </Button>
+            <Link href={"/course-list"}>
+              <Button
+                size="lg"
+                className="group h-12 px-8 text-base shadow-lg shadow-primary/20 cursor-pointer"
+              >
+                Start Learning
+                <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
+              </Button>
+            </Link>
 
             <Button
               variant="outline"
@@ -137,7 +140,7 @@ export default function Hero() {
                 </div>
 
                 <div className="hidden rounded-full bg-background px-3 py-1 text-xs text-muted-foreground sm:block">
-                  ascendacademy.dev
+                  ascend-academy-lms.vercel.app
                 </div>
               </div>
 

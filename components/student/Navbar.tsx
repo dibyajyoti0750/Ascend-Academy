@@ -41,7 +41,7 @@ export const featuredCourses = [
 ];
 
 const navLinkClass =
-  "px-4 py-2 text-sm font-medium rounded-md p-3 transition-colors hover:bg-muted";
+  "px-4 py-2 text-sm font-medium rounded-md transition-colors hover:bg-muted";
 
 const Navbar = () => {
   const { isEducator } = useCurrentUser();
@@ -88,7 +88,7 @@ const Navbar = () => {
                 <NavigationMenuTrigger>Courses</NavigationMenuTrigger>
 
                 <NavigationMenuContent>
-                  <div className="grid w-[450px] gap-3 p-4 md:grid-cols-2">
+                  <div className="grid w-md gap-3 p-4 md:grid-cols-2">
                     {featuredCourses.map((course) => (
                       <Link
                         key={course.label}
@@ -122,7 +122,7 @@ const Navbar = () => {
         </div>
 
         {/* Right */}
-        <div className="flex items-center justify-end gap-2">
+        <div className="flex items-center justify-end">
           {/* Mobile Menu */}
           <div className="lg:hidden">
             <Dropdown />
@@ -132,7 +132,7 @@ const Navbar = () => {
           <div className="hidden items-center lg:flex">
             <Show when={"signed-out"}>
               <SignInButton>
-                <span className="cursor-pointer text-sm font-medium">
+                <span className="cursor-pointer text-sm font-medium mr-5">
                   Login
                 </span>
               </SignInButton>

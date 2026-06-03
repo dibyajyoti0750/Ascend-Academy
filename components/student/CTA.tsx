@@ -1,6 +1,7 @@
 "use client";
 
 import { ArrowRight, Sparkles, PlayCircle } from "lucide-react";
+import Link from "next/link";
 
 export default function CTA() {
   return (
@@ -29,10 +30,13 @@ export default function CTA() {
             </p>
 
             <div className="mt-10 flex flex-col gap-4 sm:flex-row">
-              <button className="group inline-flex items-center justify-center gap-2 rounded-xl bg-white px-6 py-3 font-semibold text-black transition-all duration-300 hover:scale-[1.02] hover:bg-zinc-200">
+              <Link
+                href={"/course-list"}
+                className="group inline-flex items-center justify-center gap-2 rounded-xl bg-white px-6 py-3 font-semibold text-black transition-all duration-300 hover:scale-[1.02] hover:bg-zinc-200"
+              >
                 Explore Courses
                 <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
-              </button>
+              </Link>
 
               <button className="inline-flex items-center justify-center gap-2 rounded-xl border border-white/10 bg-white/5 px-6 py-3 font-medium text-white backdrop-blur transition-all duration-300 hover:bg-white/10">
                 <PlayCircle className="h-5 w-5" />
