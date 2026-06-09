@@ -1,3 +1,4 @@
+import "@/models/User";
 import { model, models, Schema } from "mongoose";
 
 const lectureSchema = new Schema({

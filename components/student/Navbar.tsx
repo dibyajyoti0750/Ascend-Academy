@@ -15,35 +15,16 @@ import {
 import SearchBar from "@/components/student/SearchBar";
 import { Dropdown } from "@/components/Dropdown";
 import { useCurrentUser } from "@/hooks/useCurrentUser";
+import { Course } from "@/types/course";
 
-export const featuredCourses = [
-  {
-    href: "/all-courses/web-dev",
-    label: "Web Development",
-    description: "Learn full stack development with MERN.",
-  },
-
-  {
-    href: "/all-courses/ai",
-    label: "AI & Automation",
-    description: "Build AI powered applications and workflows.",
-  },
-  {
-    href: "/all-courses/design",
-    label: "UI/UX Design",
-    description: "Master clean and modern interface design.",
-  },
-  {
-    href: "/all-courses/marketing",
-    label: "Marketing",
-    description: "Learn branding, growth and content strategy.",
-  },
-];
+interface Props {
+  allCourses: Course[];
+}
 
 const navLinkClass =
   "px-4 py-2 text-sm font-medium rounded-md transition-colors hover:bg-muted";
 
-const Navbar = () => {
+export default function Navbar({ allCourses }: Props) {
   const { isEducator } = useCurrentUser();
 
   return (
@@ -89,19 +70,22 @@ const Navbar = () => {
 
                 <NavigationMenuContent>
                   <div className="grid w-md gap-3 p-4 md:grid-cols-2">
-                    {featuredCourses.map((course) => (
+                    {allCourses.map((course) => (
                       <Link
-                        key={course.label}
-                        href={course.href}
+                        key={course.slug}
+                        href={`/course/${course.slug}`}
                         className="rounded-md p-3 transition-colors hover:bg-muted"
                       >
-                        <div className="text-sm font-medium">
-                          {course.label}
+                        <div className="truncate text-sm font-medium">
+                          {course.courseTitle}
                         </div>
 
-                        <p className="text-sm text-muted-foreground">
-                          {course.description}
-                        </p>
+                        <p
+                          className="line-clamp-2 text-sm font-light text-muted-foreground"
+                          dangerouslySetInnerHTML={{
+                            __html: course.courseDescription,
+                          }}
+                        />
                       </Link>
                     ))}
                   </div>
@@ -125,7 +109,7 @@ const Navbar = () => {
         <div className="flex items-center justify-end">
           {/* Mobile Menu */}
           <div className="lg:hidden">
-            <Dropdown />
+            <Dropdown allCourses={allCourses} />
           </div>
 
           {/* Desktop Auth */}
@@ -164,6 +148,4 @@ const Navbar = () => {
       </div>
     </header>
   );
-};
-
-export default Navbar;
+}

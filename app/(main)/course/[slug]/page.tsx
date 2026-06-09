@@ -4,17 +4,17 @@ import Course from "@/models/Course";
 import type { Course as CourseType } from "@/types/course";
 
 interface Props {
-  params: Promise<{ courseId: string }>;
+  params: Promise<{ slug: string }>;
 }
 
 export default async function Page({ params }: Props) {
   await connectDB();
 
-  const { courseId } = await params;
+  const { slug } = await params;
 
   const courseData: CourseType | null = JSON.parse(
     JSON.stringify(
-      await Course.findById(courseId)
+      await Course.findOne({ slug })
         .populate({
           path: "educator",
         })

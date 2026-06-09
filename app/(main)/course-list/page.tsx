@@ -1,6 +1,6 @@
 import CourseCard from "@/components/student/CourseCard";
 import connectDB from "@/lib/db";
-import Course from "@/models/Course";
+import { getCourses } from "@/lib/getCourses";
 import { Course as CourseType } from "@/types/course";
 
 interface Props {
@@ -11,13 +11,7 @@ export default async function page({ searchParams }: Props) {
   await connectDB();
   const { query } = await searchParams;
 
-  const courses: CourseType[] = JSON.parse(
-    JSON.stringify(
-      await Course.find({ isPublished: true })
-        .populate({ path: "educator" })
-        .lean(),
-    ),
-  );
+  const courses: CourseType[] = await getCourses();
 
   const trimmedQuery = query?.trim() || "";
 

@@ -65,7 +65,7 @@ export default function CourseCard({ courseData }: Props) {
   const { currency } = useCurrentUser();
 
   const {
-    _id,
+    slug,
     courseTitle,
     courseDescription,
     coursePrice,
@@ -92,7 +92,8 @@ export default function CourseCard({ courseData }: Props) {
 
   return (
     <TooltipProvider>
-      <Link href={`/course/${_id}`} className="block">
+      {/* <Link href={`/course/${_id}`} className="block"> */}
+      <Link href={`/course/${slug}`} className="block">
         <Card className="group relative flex w-full max-w-sm flex-col overflow-hidden rounded-2xl border border-border/60 bg-card p-0 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-black/10 dark:hover:shadow-black/40">
           {/* ── Thumbnail ── */}
           <div className="relative aspect-video overflow-hidden bg-muted">

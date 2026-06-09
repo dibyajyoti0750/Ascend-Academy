@@ -6,19 +6,13 @@ import Hero from "@/components/student/Hero";
 import TestimonialsSection from "@/components/student/TestimonialsSection";
 import ToastHandler from "@/components/ToastHandler";
 import connectDB from "@/lib/db";
-import Course from "@/models/Course";
+import { getCourses } from "@/lib/getCourses";
 import { Course as CourseType } from "@/types/course";
 
 export default async function page() {
   await connectDB();
 
-  const allCourses: CourseType[] = JSON.parse(
-    JSON.stringify(
-      await Course.find({ isPublished: true })
-        .populate({ path: "educator" })
-        .lean(),
-    ),
-  );
+  const allCourses: CourseType[] = await getCourses();
 
   return (
     <main className="overflow-hidden">

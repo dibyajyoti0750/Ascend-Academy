@@ -59,6 +59,8 @@ export default function AddCourse() {
   const descriptionQuillRef = useRef<Quill | null>(null);
   const requirementsQuillRef = useRef<Quill | null>(null);
 
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
   // ---------------- COURSE INPUT ----------------
 
   const handleCourseChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -189,6 +191,10 @@ export default function AddCourse() {
         courseDescription: "",
         courseRequirements: "",
       });
+
+      if (fileInputRef.current) {
+        fileInputRef.current.value = "";
+      }
 
       setChapters([
         {
@@ -353,6 +359,7 @@ export default function AddCourse() {
                   <Label htmlFor="thumbnail">Thumbnail</Label>
 
                   <Input
+                    ref={fileInputRef}
                     type="file"
                     accept="image/*"
                     onChange={(e) =>

@@ -16,12 +16,16 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Menu, SquareArrowRightEnter } from "lucide-react";
-import { featuredCourses } from "./student/Navbar";
 
 import Link from "next/link";
 import { useCurrentUser } from "@/hooks/useCurrentUser";
+import { Course } from "@/types/course";
 
-export function Dropdown() {
+interface Props {
+  allCourses: Course[];
+}
+
+export function Dropdown({ allCourses }: Props) {
   const { isEducator } = useCurrentUser();
 
   return (
@@ -43,10 +47,10 @@ export function Dropdown() {
 
             <DropdownMenuPortal>
               <DropdownMenuSubContent>
-                {featuredCourses.map((course) => (
-                  <DropdownMenuItem asChild key={course.label}>
-                    <Link href={`/course-list/${course.href}`}>
-                      {course.label}
+                {allCourses.map((course) => (
+                  <DropdownMenuItem asChild key={course.slug}>
+                    <Link href={`/course/${course.slug}`} className="truncate">
+                      {course.courseTitle}
                     </Link>
                   </DropdownMenuItem>
                 ))}

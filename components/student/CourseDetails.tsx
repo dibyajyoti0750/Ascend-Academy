@@ -86,9 +86,9 @@ export default function CourseDetails({ courseData }: Props) {
                 </h1>
 
                 <p
-                  className="mt-5 text-slate-600 text-base md:text-lg leading-7"
+                  className="mt-5 line-clamp-2 text-slate-600 text-base md:text-lg leading-7"
                   dangerouslySetInnerHTML={{
-                    __html: `${courseData.courseDescription.slice(0, 220)}...`,
+                    __html: courseData.courseDescription,
                   }}
                 />
               </div>
