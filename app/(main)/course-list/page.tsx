@@ -47,13 +47,9 @@ export default async function page({ searchParams }: Props) {
               )}
             </h1>
 
-            <p className="mt-4 text-base leading-7 text-zinc-600">
-              Discover high quality courses from industry experts and improve
-              your skills with hands-on learning.
-            </p>
-
             <div className="mt-6 inline-flex rounded-full border border-zinc-200 bg-zinc-100 px-4 py-2 text-sm font-medium text-zinc-700">
-              {filteredCourses.length} Courses Found
+              {filteredCourses.length}{" "}
+              {filteredCourses.length > 1 ? "Courses" : "Course"} Found
             </div>
           </div>
         </div>

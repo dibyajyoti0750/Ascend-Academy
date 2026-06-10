@@ -99,7 +99,7 @@ export default function CourseCard({ courseData }: Props) {
           <div className="relative aspect-video overflow-hidden bg-muted">
             <Image
               src={courseThumbnail}
-              alt={courseTitle}
+              alt={slug}
               fill
               className="object-cover transition-transform duration-500 group-hover:scale-105"
               sizes="(max-width: 768px) 100vw, 384px"
@@ -133,7 +133,10 @@ export default function CourseCard({ courseData }: Props) {
           {/* ── Body ── */}
           <CardContent className="flex flex-1 flex-col gap-3 p-4 pb-0">
             {/* Title */}
-            <h3 className="line-clamp-2 text-[15px] font-semibold leading-snug tracking-tight text-foreground">
+            <h3
+              title={courseTitle}
+              className="line-clamp-2 text-[15px] font-semibold truncate leading-snug tracking-tight text-foreground"
+            >
               {courseTitle}
             </h3>
 

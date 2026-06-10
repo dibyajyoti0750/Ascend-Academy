@@ -1,4 +1,4 @@
-import { people } from "@/assets/assets";
+import { assets, people } from "@/assets/assets";
 import { AnimatedTooltip } from "../ui/animated-tooltip";
 import {
   ArrowRight,
@@ -10,6 +10,7 @@ import {
 } from "lucide-react";
 import { Button } from "../ui/button";
 import Link from "next/link";
+import Image from "next/image";
 
 export default function Hero() {
   return (
@@ -43,10 +44,11 @@ export default function Hero() {
           </h1>
 
           {/* Description */}
-          <p className="mt-6 max-w-xl text-lg leading-relaxed text-muted-foreground sm:text-xl">
-            Master web development, AI, design, and business with project-based
-            courses designed to help you build real-world skills and land
-            opportunities faster.
+          <p className="mt-6 max-w-xl text-lg leading-relaxed text-muted-foreground">
+            Master high-income skills across content creation, coding, AI,
+            design, personal branding, business, and more with practical,
+            project-based courses designed to help you grow faster, build
+            real-world expertise, and create new opportunities.
           </p>
 
           {/* Social Proof */}
@@ -130,7 +132,7 @@ export default function Hero() {
 
           {/* Main Card */}
           <div className="relative w-full max-w-lg rounded-[2rem] border bg-background/80 p-4 shadow-2xl backdrop-blur">
-            <div className="rounded-[1.5rem] border bg-muted/40 p-6">
+            <div className="rounded-[1.5rem] border bg-muted p-6">
               {/* Fake Browser */}
               <div className="mb-6 flex items-center justify-between">
                 <div className="flex items-center gap-2">
@@ -145,31 +147,44 @@ export default function Hero() {
               </div>
 
               {/* Course Preview */}
-              <div className="relative overflow-hidden rounded-2xl bg-linear-to-br from-primary to-primary/60 p-8 text-primary-foreground">
-                {/* Noise Overlay */}
-                <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(255,255,255,0.18),transparent_35%)]" />
+              <div className="group relative h-64 overflow-hidden rounded-2xl">
+                {/* Thumbnail */}
+                <Image
+                  src={assets.featuredCourse}
+                  alt="Full Stack Web Development"
+                  fill
+                  className="object-cover transition-transform duration-700 group-hover:scale-105"
+                />
 
-                <div className="relative">
-                  <p className="mb-2 text-sm font-medium opacity-80">
-                    Featured Course
-                  </p>
+                {/* Default subtle gradient */}
+                <div className="absolute inset-0 bg-black/0 transition-all duration-500 group-hover:bg-black/70" />
 
-                  <h3 className="text-3xl font-bold leading-tight">
-                    Full Stack Web Development
-                  </h3>
+                {/* Featured Badge */}
+                <div className="absolute right-3 top-3 rounded-full border border-white/20 bg-white/10 px-3 py-1 text-[11px] font-semibold text-white shadow-lg backdrop-blur-md backdrop-saturate-150 hover:bg-white/15">
+                  ✨ Featured Course
+                </div>
 
-                  <p className="mt-4 text-sm opacity-90">
-                    Build modern apps with Next.js, TypeScript, MongoDB &
-                    Tailwind CSS.
-                  </p>
+                {/* Content */}
+                <div className="absolute inset-0 z-10 flex items-end py-10 px-8">
+                  <div className="translate-y-8 opacity-0 transition-all duration-500 group-hover:translate-y-0 group-hover:opacity-100">
+                    <h3 className="text-3xl font-bold text-white">
+                      COLOR GRADING 1O1
+                    </h3>
 
-                  <div className="mt-8 flex flex-wrap items-center gap-3">
-                    <div className="rounded-full bg-white/20 px-4 py-2 text-sm backdrop-blur">
-                      42 Lessons
-                    </div>
+                    <p className="mt-3 max-w-md text-sm leading-relaxed text-white/90">
+                      Master professional color grading from basics to advanced
+                      techniques across 42 lessons, transforming footage into
+                      cinematic, visually compelling stories.
+                    </p>
 
-                    <div className="rounded-full bg-white/20 px-4 py-2 text-sm backdrop-blur">
-                      Beginner to Pro
+                    <div className="mt-5 flex flex-wrap gap-3">
+                      <div className="rounded-full border border-white/20 bg-white/10 px-4 py-2 text-xs font-semibold text-white backdrop-blur-md backdrop-saturate-150 hover:bg-white/15">
+                        42 Lessons
+                      </div>
+
+                      <div className="rounded-full border border-white/20 bg-white/10 px-4 py-2 text-xs font-semibold text-white backdrop-blur-md backdrop-saturate-150 hover:bg-white/15">
+                        Beginner to Advanced
+                      </div>
                     </div>
                   </div>
                 </div>
