@@ -47,7 +47,7 @@ export function Dropdown({ allCourses }: Props) {
 
             <DropdownMenuPortal>
               <DropdownMenuSubContent>
-                {allCourses.map((course) => (
+                {allCourses.slice(0, 4).map((course) => (
                   <DropdownMenuItem asChild key={course.slug}>
                     <Link href={`/course/${course.slug}`} className="truncate">
                       {course.courseTitle}

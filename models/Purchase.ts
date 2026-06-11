@@ -30,13 +30,9 @@ const purchaseSchema = new Schema(
       default: "pending",
     },
 
-    paymentIntentId: {
-      type: String,
-    },
-
     provider: {
       type: String,
-      default: "stripe",
+      default: "razorpay",
     },
   },
   { timestamps: true },

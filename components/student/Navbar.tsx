@@ -70,7 +70,7 @@ export default function Navbar({ allCourses }: Props) {
 
                 <NavigationMenuContent>
                   <div className="grid w-md gap-3 p-4 md:grid-cols-2">
-                    {allCourses.map((course) => (
+                    {allCourses.slice(0, 4).map((course) => (
                       <Link
                         key={course.slug}
                         href={`/course/${course.slug}`}

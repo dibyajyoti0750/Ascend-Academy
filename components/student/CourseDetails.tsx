@@ -7,6 +7,7 @@ import {
   calcTotalHours,
   calcTotalLectures,
   humanizeDuration,
+  loadRazorpay,
 } from "@/lib/helpers";
 
 import { Course } from "@/types/course";
@@ -67,6 +68,42 @@ export default function CourseDetails({ courseData }: Props) {
     courseData.coursePrice -
     (courseData.discount * courseData.coursePrice) / 100
   ).toFixed(2);
+
+  const handlePayment = async () => {
+    await loadRazorpay();
+
+    const orderRes = await fetch("/api/create-order", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        amount: discountedPrice,
+      }),
+    });
+
+    const order = await orderRes.json();
+
+    const options = {
+      key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID,
+      amount: order.amount,
+      currency: order.currency,
+      order_id: order.id,
+
+      handler: async function (response: any) {
+        await fetch("/api/verify-payment", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(response),
+        });
+      },
+    };
+
+    const paymentObject = new (window as any).Razorpay(options);
+    paymentObject.open();
+  };
 
   return (
     <section className="bg-slate-50 min-h-screen">
@@ -346,7 +383,10 @@ export default function CourseDetails({ courseData }: Props) {
                 </div>
 
                 {/* CTA */}
-                <Button className="w-full mt-7 h-12 text-base font-semibold cursor-pointer">
+                <Button
+                  onClick={handlePayment}
+                  className="w-full mt-7 h-12 text-base font-semibold cursor-pointer"
+                >
                   {isAlreadyEnrolled ? "Already Enrolled" : "Enroll Now"}
                 </Button>
 
