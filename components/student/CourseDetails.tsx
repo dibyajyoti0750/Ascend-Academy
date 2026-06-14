@@ -36,18 +36,27 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
 import { useCurrentUser } from "@/hooks/useCurrentUser";
+import Link from "next/link";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
 interface Props {
   courseData: Course;
+  isAlreadyEnrolled: boolean;
 }
 
-export default function CourseDetails({ courseData }: Props) {
+export default function CourseDetails({
+  courseData,
+  isAlreadyEnrolled,
+}: Props) {
   const [time, setTime] = useState({
     days: 0,
     hours: 0,
     minutes: 0,
     seconds: 0,
   });
+
+  const router = useRouter();
 
   const { currency } = useCurrentUser();
 
@@ -65,8 +74,6 @@ export default function CourseDetails({ courseData }: Props) {
     videoId: string;
   } | null>(null);
 
-  const [isAlreadyEnrolled] = useState(false);
-
   const toggleSection = (index: number) => {
     setOpenSections((prev) => ({
       ...prev,
@@ -76,7 +83,7 @@ export default function CourseDetails({ courseData }: Props) {
 
   const discountedPrice = (
     courseData.coursePrice -
-    (courseData.discount * courseData.coursePrice) / 100
+    (courseData.coursePrice * courseData.discount) / 100
   ).toFixed(2);
 
   const handlePayment = async () => {
@@ -88,7 +95,7 @@ export default function CourseDetails({ courseData }: Props) {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        amount: discountedPrice,
+        courseId: courseData._id,
       }),
     });
 
@@ -101,13 +108,21 @@ export default function CourseDetails({ courseData }: Props) {
       order_id: order.id,
 
       handler: async function (response: any) {
-        await fetch("/api/verify-payment", {
+        const verifyRes = await fetch("/api/verify-payment", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
           body: JSON.stringify(response),
         });
+
+        const data = await verifyRes.json();
+
+        if (data.success) {
+          toast.success("Payment successful!");
+
+          router.push(`/player/${courseData._id}`);
+        }
       },
     };
 
@@ -417,12 +432,24 @@ export default function CourseDetails({ courseData }: Props) {
                 </div>
 
                 {/* CTA */}
-                <Button
-                  onClick={handlePayment}
-                  className="w-full mt-7 h-12 text-base font-semibold cursor-pointer"
-                >
-                  {isAlreadyEnrolled ? "Already Enrolled" : "Enroll Now"}
-                </Button>
+
+                {isAlreadyEnrolled ? (
+                  <Button asChild variant={"outline"}>
+                    <Link
+                      href={`/player/${courseData._id}`}
+                      className="w-full mt-7 h-12 text-base font-semibold cursor-pointer"
+                    >
+                      Continue Learning
+                    </Link>
+                  </Button>
+                ) : (
+                  <Button
+                    onClick={handlePayment}
+                    className="w-full mt-7 h-12 text-base font-semibold cursor-pointer"
+                  >
+                    Enroll Now
+                  </Button>
+                )}
 
                 {/* FEATURES */}
                 <div className="mt-8">

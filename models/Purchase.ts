@@ -2,7 +2,7 @@ import { model, models, Schema } from "mongoose";
 
 const purchaseSchema = new Schema(
   {
-    userId: {
+    studentId: {
       type: Schema.Types.ObjectId,
       ref: "User",
       required: true,
@@ -22,6 +22,16 @@ const purchaseSchema = new Schema(
     currency: {
       type: String,
       default: "INR",
+    },
+
+    razorpayOrderId: {
+      type: String,
+      required: true,
+      unique: true,
+    },
+
+    razorpayPaymentId: {
+      type: String,
     },
 
     paymentStatus: {
