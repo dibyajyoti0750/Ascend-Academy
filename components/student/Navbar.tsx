@@ -80,7 +80,7 @@ export default function Navbar({ allCourses }: Props) {
                           {course.courseTitle}
                         </div>
 
-                        <p
+                        <div
                           className="line-clamp-2 text-sm font-light text-muted-foreground"
                           dangerouslySetInnerHTML={{
                             __html: course.courseDescription,

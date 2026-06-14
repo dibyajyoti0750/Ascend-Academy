@@ -61,6 +61,33 @@ export function humanizeDuration(minutes: number) {
   return `${mins}m`;
 }
 
+interface Countdown {
+  days: number;
+  hours: number;
+  minutes: number;
+  seconds: number;
+}
+
+export function getCountdownTime(): Countdown {
+  const now = new Date();
+
+  const secondsSinceMidnight =
+    now.getHours() * 3600 + now.getMinutes() * 60 + now.getSeconds();
+
+  const secondsRemainingInDay = 24 * 60 * 60 - secondsSinceMidnight;
+
+  const totalSeconds = 4 * 24 * 60 * 60 + secondsRemainingInDay;
+
+  return {
+    days: Math.floor(totalSeconds / 86400),
+    hours: Math.floor((totalSeconds % 86400) / 3600),
+    minutes: Math.floor((totalSeconds % 3600) / 60),
+    seconds: totalSeconds % 60,
+  };
+}
+
+export const formatCountdown = (num: number) => num.toString().padStart(2, "0");
+
 export const loadRazorpay = () => {
   return new Promise((resolve) => {
     const script = document.createElement("script");

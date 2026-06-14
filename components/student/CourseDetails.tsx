@@ -6,18 +6,21 @@ import {
   calcChapterTime,
   calcTotalHours,
   calcTotalLectures,
+  formatCountdown,
+  getCountdownTime,
   humanizeDuration,
   loadRazorpay,
 } from "@/lib/helpers";
 
 import { Course } from "@/types/course";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { StarRating } from "./CourseCard";
 import {
   BookOpen,
   ChevronDown,
   Clock,
   Infinity,
+  Lock,
   MonitorCheck,
   PlayCircle,
   Star,
@@ -39,6 +42,13 @@ interface Props {
 }
 
 export default function CourseDetails({ courseData }: Props) {
+  const [time, setTime] = useState({
+    days: 0,
+    hours: 0,
+    minutes: 0,
+    seconds: 0,
+  });
+
   const { currency } = useCurrentUser();
 
   const totalHours = calcTotalHours(courseData.courseContent);
@@ -105,6 +115,14 @@ export default function CourseDetails({ courseData }: Props) {
     paymentObject.open();
   };
 
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setTime(getCountdownTime());
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, []);
+
   return (
     <section className="bg-slate-50 min-h-screen">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 lg:py-16">
@@ -122,7 +140,7 @@ export default function CourseDetails({ courseData }: Props) {
                   {courseData.courseTitle}
                 </h1>
 
-                <p
+                <div
                   className="mt-5 line-clamp-2 text-slate-600 text-base md:text-lg leading-7"
                   dangerouslySetInnerHTML={{
                     __html: courseData.courseDescription,
@@ -180,9 +198,15 @@ export default function CourseDetails({ courseData }: Props) {
                   </h2>
 
                   <p className="text-slate-500 mt-1">
-                    {courseData.courseContent.length} sections •{" "}
-                    {calcTotalLectures(courseData.courseContent)} lectures •{" "}
-                    {durationText}
+                    {courseData.courseContent.length}{" "}
+                    {courseData.courseContent.length > 1
+                      ? "sections"
+                      : "section"}{" "}
+                    • {calcTotalLectures(courseData.courseContent)}{" "}
+                    {calcTotalLectures(courseData.courseContent) > 1
+                      ? "lectures"
+                      : "lecture"}{" "}
+                    • {durationText}
                   </p>
                 </div>
               </div>
@@ -198,7 +222,7 @@ export default function CourseDetails({ courseData }: Props) {
                       className="w-full flex items-center justify-between px-5 text-left cursor-pointer outline-none transition"
                     >
                       <div className="flex items-center gap-3">
-                        <div className="h-9 w-9 rounded-full bg-slate-100 flex items-center justify-center">
+                        <div className="h-9 w-9 hover:bg-slate-100 rounded-full flex items-center justify-center">
                           <ChevronDown
                             className={`h-5 w-5 transition-transform duration-300 ${
                               openSections[index] ? "rotate-180" : ""
@@ -212,7 +236,10 @@ export default function CourseDetails({ courseData }: Props) {
                           </p>
 
                           <p className="text-sm text-slate-500 mt-1">
-                            {chapter.chapterContent.length} lectures
+                            {chapter.chapterContent.length}{" "}
+                            {chapter.chapterContent.length > 1
+                              ? "lectures"
+                              : "lecture"}
                           </p>
                         </div>
                       </div>
@@ -235,9 +262,13 @@ export default function CourseDetails({ courseData }: Props) {
                             key={idx}
                             className="flex items-start justify-between gap-4"
                           >
-                            <div className="flex items-start gap-3">
+                            <div className="flex items-center gap-3">
                               <div className="mt-0.5">
-                                <TvMinimalPlay className="h-5 w-5 text-slate-500" />
+                                {lecture.isPreviewFree ? (
+                                  <TvMinimalPlay className="h-5 w-5 text-slate-500" />
+                                ) : (
+                                  <Lock className="h-5 w-5 text-slate-500" />
+                                )}
                               </div>
 
                               <div>
@@ -334,7 +365,10 @@ export default function CourseDetails({ courseData }: Props) {
                 <div className="flex items-center gap-2 text-red-500 bg-red-50 border border-red-100 rounded-lg px-4 py-3">
                   <TimerReset className="h-5 w-5" />
                   <p className="font-medium text-sm">
-                    Price increases in 4 days
+                    Price increases in {time.days}d{" "}
+                    {formatCountdown(time.hours)}h{" "}
+                    {formatCountdown(time.minutes)}m{" "}
+                    {formatCountdown(time.seconds)}s
                   </p>
                 </div>
 
