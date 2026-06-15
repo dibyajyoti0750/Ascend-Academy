@@ -29,6 +29,7 @@ import Rating from "../Rating";
 import { Course } from "@/types/course";
 import { toast } from "sonner";
 import { CourseProgress } from "@/types/courseProgress";
+import { Button } from "../ui/button";
 
 interface Props {
   courseData: Course;
@@ -43,6 +44,7 @@ export default function Player({ courseData, progressDoc, userId }: Props) {
   });
 
   const [playerData, setPlayerData] = useState<{
+    lectureId: string;
     videoId: string;
     chapter: number;
     lecture: number;
@@ -82,6 +84,8 @@ export default function Player({ courseData, progressDoc, userId }: Props) {
 
       const data = await response.json();
 
+      console.log(data);
+
       if (data.success) {
         toast.success(data.message);
       } else {
@@ -91,6 +95,9 @@ export default function Player({ courseData, progressDoc, userId }: Props) {
       toast.error("Something went wrong");
     }
   };
+
+  const isCompleted =
+    playerData && progressDoc?.lectureCompleted?.includes(playerData.lectureId);
 
   if (!courseData) {
     return (
@@ -139,9 +146,11 @@ export default function Player({ courseData, progressDoc, userId }: Props) {
 
                 <p className="text-slate-600">
                   <span className="font-medium text-slate-900">
-                    {calcTotalLectures(courseData.courseContent)}
-                  </span>{" "}
-                  lectures
+                    {calcTotalLectures(courseData.courseContent)}{" "}
+                    {calcTotalLectures(courseData.courseContent) > 1
+                      ? "lectures"
+                      : "lecture"}
+                  </span>
                 </p>
 
                 <Separator orientation="vertical" className="h-5" />
@@ -164,8 +173,11 @@ export default function Player({ courseData, progressDoc, userId }: Props) {
 
                   <p className="text-slate-500 mt-1">
                     {courseData.courseContent.length} sections •{" "}
-                    {calcTotalLectures(courseData.courseContent)} lectures •{" "}
-                    {durationText}
+                    {calcTotalLectures(courseData.courseContent)}{" "}
+                    {calcTotalLectures(courseData.courseContent) > 1
+                      ? "lectures"
+                      : "lecture"}{" "}
+                    • {durationText}
                   </p>
                 </div>
               </div>
@@ -195,7 +207,10 @@ export default function Player({ courseData, progressDoc, userId }: Props) {
                           </p>
 
                           <p className="text-sm text-slate-500 mt-1">
-                            {chapter.chapterContent.length} lectures
+                            {calcTotalLectures(courseData.courseContent)}{" "}
+                            {calcTotalLectures(courseData.courseContent) > 1
+                              ? "lectures"
+                              : "lecture"}
                           </p>
                         </div>
                       </div>
@@ -246,6 +261,7 @@ export default function Player({ courseData, progressDoc, userId }: Props) {
                                 <div
                                   onClick={() =>
                                     setPlayerData({
+                                      lectureId: lecture._id,
                                       videoId:
                                         lecture.lectureUrl?.split("/").pop() ??
                                         "",
@@ -321,6 +337,24 @@ export default function Player({ courseData, progressDoc, userId }: Props) {
                       {playerData.title}
                     </h2>
 
+                    {isCompleted ? (
+                      <Button className="w-full mt-4 h-12 bg-green-100 border border-green-200 text-green-700 font-semibold opacity-100 cursor-default">
+                        ✓ Completed
+                      </Button>
+                    ) : (
+                      <Button
+                        onClick={() =>
+                          handleLectureComplete(
+                            courseData._id,
+                            playerData.lectureId,
+                          )
+                        }
+                        className="mt-4 w-full cursor-pointer"
+                      >
+                        Mark as Complete
+                      </Button>
+                    )}
+
                     <div className="grid grid-cols-3 gap-4 mt-6">
                       <div className="rounded-xl border bg-slate-50 p-3 text-center">
                         <BookOpen className="h-5 w-5 mx-auto text-slate-700" />
@@ -328,8 +362,6 @@ export default function Player({ courseData, progressDoc, userId }: Props) {
                         <p className="mt-2 text-sm font-semibold text-slate-900">
                           {courseData.courseContent.length}
                         </p>
-
-                        <p className="text-xs text-slate-500 mt-1">Sections</p>
                       </div>
 
                       <div className="rounded-xl border bg-slate-50 p-3 text-center">
@@ -338,8 +370,6 @@ export default function Player({ courseData, progressDoc, userId }: Props) {
                         <p className="mt-2 text-sm font-semibold text-slate-900">
                           {durationText}
                         </p>
-
-                        <p className="text-xs text-slate-500 mt-1">Hours</p>
                       </div>
 
                       <div className="rounded-xl border bg-slate-50 p-3 text-center">
@@ -348,8 +378,6 @@ export default function Player({ courseData, progressDoc, userId }: Props) {
                         <p className="mt-2 text-sm font-semibold text-slate-900">
                           {calcAverageRating(courseData.courseRatings)}
                         </p>
-
-                        <p className="text-xs text-slate-500 mt-1">Rating</p>
                       </div>
                     </div>
                   </div>
@@ -368,8 +396,6 @@ export default function Player({ courseData, progressDoc, userId }: Props) {
                         <p className="mt-2 text-sm font-semibold text-slate-900">
                           {courseData.courseContent.length}
                         </p>
-
-                        <p className="text-xs text-slate-500 mt-1">Sections</p>
                       </div>
 
                       <div className="rounded-xl border bg-slate-50 p-3 text-center">
@@ -378,8 +404,6 @@ export default function Player({ courseData, progressDoc, userId }: Props) {
                         <p className="mt-2 text-sm font-semibold text-slate-900">
                           {durationText}
                         </p>
-
-                        <p className="text-xs text-slate-500 mt-1">Hours</p>
                       </div>
 
                       <div className="rounded-xl border bg-slate-50 p-3 text-center">
@@ -388,8 +412,6 @@ export default function Player({ courseData, progressDoc, userId }: Props) {
                         <p className="mt-2 text-sm font-semibold text-slate-900">
                           {calcAverageRating(courseData.courseRatings)}
                         </p>
-
-                        <p className="text-xs text-slate-500 mt-1">Rating</p>
                       </div>
                     </div>
                   </div>

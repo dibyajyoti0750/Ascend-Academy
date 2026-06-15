@@ -191,8 +191,8 @@ export default function CourseDetails({
                     {courseData.enrolledStudents.length}
                   </span>{" "}
                   {courseData.enrolledStudents.length > 1
-                    ? "students"
-                    : "students"}
+                    ? "studens"
+                    : "student"}
                 </p>
               </div>
 
@@ -434,12 +434,12 @@ export default function CourseDetails({
                 {/* CTA */}
 
                 {isAlreadyEnrolled ? (
-                  <Button asChild variant={"outline"}>
+                  <Button asChild variant="secondary">
                     <Link
                       href={`/player/${courseData._id}`}
-                      className="w-full mt-7 h-12 text-base font-semibold cursor-pointer"
+                      className="w-full mt-7 h-12 text-base font-semibold text-white bg-sky-600 hover:bg-sky-500"
                     >
-                      Continue Learning
+                      Continue Learning →
                     </Link>
                   </Button>
                 ) : (

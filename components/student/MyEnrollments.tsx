@@ -110,76 +110,85 @@ export default function MyEnrollments({
                   </thead>
 
                   <tbody>
-                    {courseWithProgress.map((course) => (
-                      <tr
-                        key={course._id}
-                        className="border-b transition hover:bg-muted/40"
-                      >
-                        {/* Course */}
-                        <td className="px-6 py-5">
-                          <div className="flex items-center gap-4">
-                            <Image
-                              src={course.courseThumbnail}
-                              alt={course.courseTitle}
-                              width={120}
-                              height={70}
-                              className="rounded-lg border object-cover"
-                            />
+                    {courseWithProgress.map((course) => {
+                      const totalHours = calcTotalHours(course.courseContent);
 
-                            <div className="min-w-0 flex-1">
-                              <h3 className="line-clamp-1 font-medium">
-                                {course.courseTitle}
-                              </h3>
+                      const durationText =
+                        totalHours < 1
+                          ? `${Math.round(totalHours * 60)} min`
+                          : `${totalHours.toFixed(1)}h`;
 
-                              <div className="mt-3 space-y-2">
-                                <div className="flex items-center justify-between text-xs text-muted-foreground">
-                                  <span>Course Progress</span>
+                      return (
+                        <tr
+                          key={course._id}
+                          className="border-b transition hover:bg-muted/40"
+                        >
+                          {/* Course */}
+                          <td className="px-6 py-5">
+                            <div className="flex items-center gap-4">
+                              <Image
+                                src={course.courseThumbnail}
+                                alt={course.courseTitle}
+                                width={120}
+                                height={70}
+                                className="rounded-lg border object-cover"
+                              />
 
-                                  <span>{course.progress.toFixed(0)}%</span>
+                              <div className="min-w-0 flex-1">
+                                <h3 className="line-clamp-1 font-medium">
+                                  {course.courseTitle}
+                                </h3>
+
+                                <div className="mt-3 space-y-2">
+                                  <div className="flex items-center justify-between text-xs text-muted-foreground">
+                                    <span>Course Progress</span>
+
+                                    <span>{course.progress.toFixed(0)}%</span>
+                                  </div>
+
+                                  <Progress value={course.progress} />
                                 </div>
-
-                                <Progress value={course.progress} />
                               </div>
                             </div>
-                          </div>
-                        </td>
+                          </td>
 
-                        {/* Duration */}
-                        <td className="px-6 py-5 text-sm text-muted-foreground">
-                          {calcTotalHours(course.courseContent)}h
-                        </td>
+                          {/* Duration */}
+                          <td className="px-6 py-5 text-sm text-muted-foreground">
+                            {durationText}
+                          </td>
 
-                        {/* Lectures */}
-                        <td className="px-6 py-5 text-sm">
-                          {course.completedLectures}/{course.totalLectures}{" "}
-                          lectures
-                        </td>
+                          {/* Lectures */}
+                          <td className="px-6 py-5 text-sm">
+                            {course.completedLectures}/{course.totalLectures}{" "}
+                            {course.totalLectures > 1 ? "lectures" : "lecture"}
+                          </td>
 
-                        {/* Status */}
-                        <td className="px-6 py-5 text-right">
-                          <div className="flex items-center justify-end gap-3">
-                            <Badge
-                              className={`${course.isCompleted ? "bg-green-50 text-green-500" : "bg-blue-50 text-blue-500"}`}
-                            >
-                              {course.isCompleted ? (
-                                <span className="flex items-center gap-2">
-                                  Completed <Check size={10} />
-                                </span>
-                              ) : (
-                                <span>Ongoing</span>
-                              )}
-                            </Badge>
+                          {/* Status */}
+                          <td className="px-6 py-5 text-right">
+                            <div className="flex items-center justify-end gap-3">
+                              <Badge
+                                className={`${course.isCompleted ? "bg-green-50 text-green-500" : "bg-blue-50 text-blue-500"}`}
+                              >
+                                {course.isCompleted ? (
+                                  <span className="flex items-center gap-2">
+                                    Completed <Check size={10} />
+                                  </span>
+                                ) : (
+                                  <span>Ongoing</span>
+                                )}
+                              </Badge>
 
-                            <Link
-                              href={`/player/${course._id}`}
-                              className="rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition hover:opacity-90"
-                            >
-                              {course.isCompleted ? "Review" : "Continue"}
-                            </Link>
-                          </div>
-                        </td>
-                      </tr>
-                    ))}
+                              <Link
+                                href={`/player/${course._id}`}
+                                className="rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition hover:opacity-90"
+                              >
+                                {course.isCompleted ? "Review" : "Continue"}
+                              </Link>
+                            </div>
+                          </td>
+                        </tr>
+                      );
+                    })}
                   </tbody>
                 </table>
               </CardContent>

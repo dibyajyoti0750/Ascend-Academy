@@ -39,10 +39,14 @@ export default async function page({ params }: Props) {
       (r) => r.userId.toString() === user._id.toString(),
     )?.rating ?? 0;
 
-  const progressDoc = await CourseProgress.findOne({
-    courseId,
-    userId: user._id,
-  });
+  const progressDoc = JSON.parse(
+    JSON.stringify(
+      await CourseProgress.findOne({
+        courseId,
+        userId: user._id,
+      }),
+    ),
+  );
 
   return (
     <Player
