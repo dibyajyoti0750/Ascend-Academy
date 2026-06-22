@@ -48,7 +48,7 @@ export default async function page() {
     course.enrolledStudents.forEach((student: Student) => {
       const purchase = purchases.find(
         (purchase) =>
-          purchase.userId.toString() === student._id.toString() &&
+          purchase.studentId.toString() === student._id.toString() &&
           purchase.courseId.toString() === course._id.toString(),
       );
 

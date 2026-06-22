@@ -38,7 +38,7 @@ export default async function page() {
 
   const enrolledStudentsData: EnrolledStudentData[] = purchases.map(
     (purchase) => ({
-      student: purchase.userId,
+      student: purchase.studentId,
       courseTitle: purchase.courseId.courseTitle,
       purchaseDate: purchase.createdAt,
     }),
