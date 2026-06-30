@@ -32,7 +32,7 @@ export default async function page() {
     courseId: { $in: courseIds },
     status: "completed",
   })
-    .populate("userId", "_id name imageUrl")
+    .populate("studentId", "_id name imageUrl")
     .populate("courseId", "courseTitle")
     .lean();
 
